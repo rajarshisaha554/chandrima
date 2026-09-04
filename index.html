@@ -723,34 +723,38 @@
   }
 
   /* =========================================================
-     TAB NAVIGATION BAR (Dr. Chandrima vs Sankha's Wish)
+     TAB NAVIGATION BAR (Mobile-Optimized Segmented Pill Bar)
      ========================================================= */
   .page-nav-wrapper {
-    margin: 12px auto 18px;
-    display: flex;
-    justify-content: center;
+    margin: 6px auto 14px;
+    width: 100%;
+    max-width: 480px;
+    position: sticky;
+    top: 48px;
+    z-index: 95;
+    padding: 0 8px;
+    box-sizing: border-box;
   }
   .nav-segmented {
     display: flex;
-    background: rgba(255, 255, 255, 0.94);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--cream-card-border);
     border-radius: 999px;
-    padding: 4px;
-    box-shadow: 0 6px 20px rgba(36, 48, 74, 0.08);
-    gap: 4px;
+    padding: 3px;
+    box-shadow: 0 4px 16px rgba(36, 48, 74, 0.08);
+    gap: 2px;
     width: 100%;
-    max-width: 480px;
+    box-sizing: border-box;
   }
   .nav-btn {
-    flex: 1;
     border: none;
     background: transparent;
-    padding: 9px 8px;
     border-radius: 999px;
     font-family: var(--font-body);
-    font-size: 0.8rem;
     font-weight: 700;
     color: var(--plum-soft);
     cursor: pointer;
@@ -760,23 +764,89 @@
     justify-content: center;
     gap: 4px;
     white-space: nowrap;
-    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    min-width: 0;
+    padding: 7px 4px;
+    -webkit-tap-highlight-color: transparent;
   }
   .nav-btn:hover {
     color: var(--plum);
   }
+  .nav-btn:active {
+    transform: scale(0.96);
+  }
+  .nav-icon {
+    font-size: 0.85rem;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .nav-label {
+    font-size: 0.72rem;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+
+  /* Mobile Proportional Sizing (all 4 tabs fit effortlessly on any screen) */
+  #tabBtnDoctor { flex: 1.35 1 0; }
+  #tabBtnSankha { flex: 0.95 1 0; }
+  #tabBtnDebjit { flex: 0.95 1 0; }
+  #tabBtnMusketeers { flex: 1.15 1 0; }
+
   .nav-btn.active {
     background: linear-gradient(135deg, #FF6584, #E11D48);
-    color: #FFFFFF;
-    box-shadow: 0 4px 14px rgba(225, 29, 72, 0.35);
+    color: #FFFFFF !important;
+    box-shadow: 0 3px 12px rgba(225, 29, 72, 0.35);
   }
-  .nav-pulse-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: #10B981;
-    display: inline-block;
-    box-shadow: 0 0 6px rgba(16, 185, 129, 0.6);
+  .nav-btn.active.sankha-active {
+    background: linear-gradient(135deg, #F59E0B, #EA580C);
+    box-shadow: 0 3px 12px rgba(234, 88, 12, 0.35);
+    color: #FFFFFF !important;
+  }
+  .nav-btn.active.debjit-active {
+    background: linear-gradient(135deg, #7E22CE, #9333EA);
+    box-shadow: 0 3px 12px rgba(126, 34, 206, 0.35);
+    color: #FFFFFF !important;
+  }
+  .nav-btn.active.musketers-active {
+    background: linear-gradient(135deg, #0D9488, #059669);
+    box-shadow: 0 3px 12px rgba(13, 148, 136, 0.35);
+    color: #FFFFFF !important;
+  }
+
+  /* Ultra-small screens (e.g. 320px - 350px) */
+  @media (max-width: 350px) {
+    .page-nav-wrapper {
+      padding: 0 4px;
+    }
+    .nav-btn {
+      padding: 6px 2px;
+      gap: 2px;
+    }
+    .nav-icon {
+      font-size: 0.78rem;
+    }
+    .nav-label {
+      font-size: 0.66rem;
+    }
+  }
+
+  /* Tablet / Desktop wider screens */
+  @media (min-width: 480px) {
+    .nav-segmented {
+      padding: 4px;
+      gap: 4px;
+    }
+    .nav-btn {
+      flex: 1 1 0 !important;
+      padding: 9px 8px;
+      gap: 6px;
+    }
+    .nav-icon {
+      font-size: 0.95rem;
+    }
+    .nav-label {
+      font-size: 0.82rem;
+    }
   }
 
   /* Page Tab Containers */
@@ -814,21 +884,24 @@
 
   <!-- TOP PAGE NAVIGATION -->
   <div class="page-nav-wrapper">
-    <div class="nav-segmented">
-      <a href="index.html" class="nav-btn active" id="tabBtnDoctor">
-        <span>🩺 Dr. Chandrima</span>
+    <nav class="nav-segmented" aria-label="Page navigation">
+      <a href="index.html" class="nav-btn active" id="tabBtnDoctor" aria-label="Dr. Chandrima Tab">
+        <span class="nav-icon">🩺</span>
+        <span class="nav-label">Dr. Chandrima</span>
       </a>
-      <a href="sankha.html" class="nav-btn" id="tabBtnSankha">
-        <span class="nav-pulse-dot"></span>
-        <span>🎒 Sankha</span>
+      <a href="sankha.html" class="nav-btn" id="tabBtnSankha" aria-label="Sankha Tab">
+        <span class="nav-icon">🎒</span>
+        <span class="nav-label">Sankha</span>
       </a>
-      <a href="debjit.html" class="nav-btn" id="tabBtnDebjit">
-        <span>👻 Debjit</span>
+      <a href="debjit.html" class="nav-btn" id="tabBtnDebjit" aria-label="Debjit Tab">
+        <span class="nav-icon">👻</span>
+        <span class="nav-label">Debjit</span>
       </a>
-      <a href="musketers.html" class="nav-btn" id="tabBtnMusketeers">
-        <span>✨ Musketeers</span>
+      <a href="musketers.html" class="nav-btn" id="tabBtnMusketeers" aria-label="Musketeers Tab">
+        <span class="nav-icon">✨</span>
+        <span class="nav-label">Musketeers</span>
       </a>
-    </div>
+    </nav>
   </div>
 
   <!-- TAB 1: DR. CHANDRIMA (MBBS JOURNEY) -->
@@ -1298,6 +1371,11 @@ window.addEventListener('DOMContentLoaded', () => {
   initThreeBackground();
   animateThreeBackground();
   buildGallery();
+
+  const activeNav = document.querySelector('.nav-btn.active');
+  if (activeNav) {
+    activeNav.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+  }
 
   // Initial welcome confetti burst
   setTimeout(() => {
