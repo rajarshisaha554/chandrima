@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<!-- Optimized for phone / mobile viewport, notched screens, safe areas -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>To Dr. Chandrima | Happy Birthday & MBBS Journey</title>
+<meta name="description" content="A special celebration for Chandrima's birthday and stepping into her dream MBBS journey.">
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+
+<!-- Three.js from CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<!-- Canvas Confetti -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<style>
+  :root{
+    /* Warm, elegant cream palette */
+    --cream: #FFFDF9;
+    --cream-deep: #F8F4EE;
+    --cream-card: rgba(255, 255, 255, 0.88);
+    --cream-card-border: rgba(230, 218, 206, 0.7);
+    --plum: #24304A;
+    --plum-soft: #64748B;
+    --rose: #FF6584;
+    --rose-deep: #E11D48;
+    --rose-soft: #FFF0F5;
+    --cyan: #0284C7;
+    --cyan-soft: #E0F2FE;
+    --emerald: #059669;
+    --emerald-soft: #ECFDF5;
+    --gold: #D97706;
+    --shadow-soft: 0 10px 25px rgba(36, 48, 74, 0.08);
+    --shadow-deep: 0 20px 45px rgba(36, 48, 74, 0.12);
+    --font-heading: 'Fraunces', serif;
+    --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-hand: 'Caveat', cursive;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    background-color: var(--cream);
+  }
+
+  body {
+    background:
+      radial-gradient(circle at 15% 10%, rgba(255, 217, 234, 0.5), transparent 45%),
+      radial-gradient(circle at 85% 30%, rgba(190, 231, 255, 0.5), transparent 50%),
+      radial-gradient(circle at 50% 85%, rgba(254, 243, 199, 0.45), transparent 55%),
+      var(--cream);
+    color: var(--plum);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+    padding-bottom: env(safe-area-inset-bottom, 24px);
+  }
+
+  /* 3D WebGL Canvas Layer */
+  #webgl-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+
+
+  /* ECG Rhythm Bar (Pulse) */
+  .ecg-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255, 253, 249, 0.88);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--cream-card-border);
+    padding: 9px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 15px rgba(36, 48, 74, 0.04);
+  }
+
+  .ecg-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--rose-deep);
+  }
+
+  .pulse-dot {
+    width: 9px;
+    height: 9px;
+    background: var(--rose-deep);
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(225, 29, 72, 0.5);
+    animation: pulseRing 1.3s infinite ease-out;
+  }
+  @keyframes pulseRing {
+    0% { transform: scale(0.9); opacity: 1; }
+    50% { transform: scale(1.4); opacity: 0.7; }
+    100% { transform: scale(0.9); opacity: 1; }
+  }
+
+  .ecg-svg {
+    width: 90px;
+    height: 22px;
+    stroke: var(--rose-deep);
+    fill: none;
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    animation: ecgDash 2s linear infinite;
+    stroke-dasharray: 120;
+  }
+  @keyframes ecgDash {
+    0% { stroke-dashoffset: 240; }
+    100% { stroke-dashoffset: 0; }
+  }
+
+  .bpm-tag {
+    font-size: 0.75rem;
+    background: var(--rose-soft);
+    color: var(--rose-deep);
+    padding: 3px 9px;
+    border-radius: 20px;
+    font-weight: 700;
+    border: 1px solid rgba(225, 29, 72, 0.15);
+  }
+
+  /* Content Wrapper (Phone layout container) */
+  .app-container {
+    position: relative;
+    z-index: 10;
+    max-width: 480px; /* Optimized phone frame */
+    margin: 0 auto;
+    padding: 18px 18px 80px;
+  }
+
+  /* Hero Section (Full-screen hero card) */
+  .hero-card {
+    background: var(--cream-card);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    border-radius: 32px;
+    padding: 36px 22px 30px;
+    box-shadow: var(--shadow-deep);
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    min-height: calc(100vh - 80px);
+    min-height: calc(100dvh - 80px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .hero-content-wrap {
+    width: 100%;
+    margin: auto 0;
+  }
+
+  .scroll-down-hint {
+    margin-top: 24px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--rose-deep);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    animation: bounceDown 2s infinite ease-in-out;
+  }
+  @keyframes bounceDown {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(6px); }
+  }
+
+  .hero-avatar-wrap {
+    position: relative;
+    width: 140px;
+    height: 140px;
+    margin: 0 auto 16px;
+  }
+
+  .hero-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #FFFFFF;
+    box-shadow: 0 10px 30px rgba(225, 29, 72, 0.25);
+    display: block;
+  }
+
+  .hero-avatar-ring {
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 2px dashed var(--rose);
+    animation: rotateRing 24s linear infinite;
+    pointer-events: none;
+  }
+  @keyframes rotateRing {
+    to { transform: rotate(360deg); }
+  }
+
+
+
+  .pill-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    background: rgba(225, 29, 72, 0.08);
+    border: 1px solid rgba(225, 29, 72, 0.2);
+    border-radius: 999px;
+    color: var(--rose-deep);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .hero-title {
+    font-family: var(--font-heading);
+    font-size: 2.15rem;
+    line-height: 1.15;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--plum);
+  }
+
+  .hero-tagline {
+    font-family: var(--font-hand);
+    font-size: 1.55rem;
+    color: var(--rose-deep);
+    margin-bottom: 12px;
+    letter-spacing: 0.02em;
+  }
+
+  .hero-desc {
+    font-size: 0.92rem;
+    color: var(--plum-soft);
+    line-height: 1.55;
+    margin-bottom: 16px;
+  }
+
+  /* Interactive action button */
+  .celebrate-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 15px 22px;
+    background: linear-gradient(135deg, #FF6584 0%, #E11D48 100%);
+    border: none;
+    border-radius: 18px;
+    color: #fff;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-weight: 700;
+    box-shadow: 0 10px 24px rgba(225, 29, 72, 0.35);
+    cursor: pointer;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s;
+    margin-top: 14px;
+  }
+  .celebrate-btn:active {
+    transform: scale(0.96);
+  }
+
+  /* Medical Milestone Badges */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 18px;
+  }
+
+  .stat-card {
+    background: #FFFFFF;
+    border: 1px solid var(--cream-card-border);
+    border-radius: 16px;
+    padding: 12px 8px;
+    text-align: center;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .stat-icon {
+    font-size: 1.3rem;
+    margin-bottom: 4px;
+  }
+
+  .stat-val {
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: var(--plum);
+  }
+
+  .stat-label {
+    font-size: 0.65rem;
+    color: var(--plum-soft);
+    margin-top: 2px;
+  }
+
+  /* Section Title */
+  .section-header {
+    margin: 36px 0 18px;
+    text-align: left;
+  }
+
+  .sub-tag {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--rose-deep);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .section-h2 {
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    color: var(--plum);
+    margin-top: 4px;
+  }
+
+  /* MBBS Journey Roadmap Cards */
+  .mbbs-journey-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .journey-card {
+    background: #FFFFFF;
+    border: 1px solid var(--cream-card-border);
+    border-radius: 22px;
+    padding: 18px;
+    position: relative;
+    box-shadow: var(--shadow-soft);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .journey-card:hover, .journey-card:active {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-deep);
+  }
+
+  .journey-card-top {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 10px;
+  }
+
+  .year-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.35rem;
+    flex-shrink: 0;
+  }
+  .y1-bg { background: #FFF0F5; border: 1px solid #FFD1DC; }
+  .y2-bg { background: #F0F9FF; border: 1px solid #BAE6FD; }
+  .y3-bg { background: #ECFDF5; border: 1px solid #A7F3D0; }
+  .y4-bg { background: #FEF3C7; border: 1px solid #FDE68A; }
+
+  .year-meta h3 {
+    font-family: var(--font-heading);
+    font-size: 1.15rem;
+    color: var(--plum);
+    margin-bottom: 2px;
+  }
+
+  .year-tag {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--rose-deep);
+    text-transform: uppercase;
+  }
+
+  .journey-card p {
+    font-size: 0.88rem;
+    color: var(--plum-soft);
+    line-height: 1.5;
+  }
+
+  .subject-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 12px;
+  }
+
+  .subject-chip {
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 8px;
+    background: var(--cream-deep);
+    color: var(--plum);
+    border: 1px solid var(--cream-card-border);
+  }
+
+  /* Doctor's Prescription / Letter Section */
+  .rx-card {
+    background: #FFFFFF;
+    color: var(--plum);
+    border: 1px solid var(--cream-card-border);
+    border-radius: 24px;
+    padding: 24px 20px;
+    position: relative;
+    box-shadow: var(--shadow-deep);
+    margin-top: 30px;
+    overflow: hidden;
+  }
+
+  .rx-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, var(--rose), #38BDF8, #10B981, #FBBF24);
+  }
+
+  .rx-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    border-bottom: 2px dashed #E2E8F0;
+    padding-bottom: 12px;
+    margin-bottom: 14px;
+  }
+
+  .rx-brand h4 {
+    font-family: var(--font-heading);
+    font-size: 1.22rem;
+    color: var(--plum);
+  }
+
+  .rx-brand span {
+    font-size: 0.75rem;
+    color: var(--plum-soft);
+    font-weight: 600;
+  }
+
+  .rx-symbol {
+    font-family: var(--font-heading);
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--rose-deep);
+    line-height: 1;
+  }
+
+  .rx-details {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--plum-soft);
+    margin-bottom: 14px;
+  }
+
+  .rx-body {
+    font-size: 0.92rem;
+    line-height: 1.6;
+    color: var(--plum);
+  }
+
+  .rx-body strong {
+    color: var(--plum);
+  }
+
+  .rx-prescriptions {
+    margin: 14px 0;
+    padding-left: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .rx-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.88rem;
+    font-weight: 600;
+  }
+  .rx-bullet {
+    color: var(--rose-deep);
+  }
+
+  .rx-sign {
+    margin-top: 20px;
+    text-align: right;
+    border-top: 1px solid #E2E8F0;
+    padding-top: 10px;
+  }
+
+  .rx-sign-name {
+    font-family: var(--font-hand);
+    font-size: 1.5rem;
+    color: var(--rose-deep);
+    font-weight: 700;
+  }
+
+  .rx-stamp {
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: #059669;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  /* Photo Memory Gallery (Mobile carousel / touch scrollable) */
+  .gallery-scroll-container {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    padding: 12px 6px 24px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .gallery-scroll-container::-webkit-scrollbar {
+    display: none;
+  }
+
+  .gallery-card {
+    flex: 0 0 220px;
+    scroll-snap-align: center;
+    background: #FFFFFF;
+    padding: 10px 10px 16px;
+    border-radius: 18px;
+    border: 1px solid var(--cream-card-border);
+    box-shadow: 0 8px 24px rgba(36, 48, 74, 0.08);
+    cursor: pointer;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    text-align: center;
+  }
+  .gallery-card:active {
+    transform: scale(0.97);
+  }
+
+  .photo-box {
+    width: 100%;
+    height: 240px;
+    border-radius: 14px;
+    position: relative;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+  }
+
+  .photo-caption {
+    font-family: var(--font-heading);
+    font-size: 0.92rem;
+    color: var(--plum);
+    text-align: center;
+    margin-top: 10px;
+    font-weight: 600;
+  }
+
+  .photo-subcaption {
+    font-size: 0.72rem;
+    color: var(--plum-soft);
+    margin-top: 2px;
+    font-style: italic;
+  }
+
+  /* Interactive Medical Kit Quiz / Tap Affirmations */
+  .affirmation-box {
+    background: #FFFFFF;
+    border: 1px solid var(--cream-card-border);
+    border-radius: 24px;
+    padding: 22px 18px;
+    margin-top: 28px;
+    text-align: center;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .affirmation-display {
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-heading);
+    font-size: 1.15rem;
+    color: var(--plum);
+    line-height: 1.4;
+    padding: 10px;
+    transition: opacity 0.3s;
+  }
+
+  .affirmation-btn {
+    background: var(--cream-deep);
+    border: 1px solid var(--cream-card-border);
+    color: var(--plum);
+    padding: 10px 20px;
+    border-radius: 14px;
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+  }
+  .affirmation-btn:active {
+    transform: scale(0.95);
+  }
+
+  /* Lightbox for photos */
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(36, 48, 74, 0.72);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .lightbox.open {
+    display: flex;
+    opacity: 1;
+  }
+  .lightbox-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 14px 14px 22px;
+    max-width: 360px;
+    width: 100%;
+    transform: scale(0.9);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+    text-align: center;
+  }
+  .lightbox.open .lightbox-card {
+    transform: scale(1);
+  }
+  .lightbox-img-box {
+    width: 100%;
+    height: 380px;
+    max-height: 55vh;
+    border-radius: 14px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .lightbox-text {
+    font-family: var(--font-heading);
+    font-style: italic;
+    color: var(--plum);
+    margin-top: 14px;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+  .lightbox-close-btn {
+    margin-top: 14px;
+    background: var(--plum);
+    color: #fff;
+    border: none;
+    padding: 8px 24px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+
+  /* Footer */
+  .footer-love {
+    text-align: center;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid var(--cream-card-border);
+  }
+  .footer-love h3 {
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    color: var(--plum);
+  }
+  .footer-love p {
+    font-family: var(--font-hand);
+    font-size: 1.6rem;
+    color: var(--rose-deep);
+    margin-top: 6px;
+  }
+
+</style>
+</head>
+<body>
+
+<!-- Background Three.js floating medical items & capsules -->
+<div id="webgl-container"></div>
+
+<!-- Mobile Status Bar / Pulse -->
+<div class="ecg-topbar">
+  <div class="ecg-left">
+    <div class="pulse-dot"></div>
+    <span>DR. CHANDRIMA</span>
+  </div>
+  <svg class="ecg-svg" viewBox="0 0 100 25">
+    <path d="M 0 12 L 25 12 L 32 3 L 42 22 L 50 2 L 56 16 L 62 12 L 100 12" />
+  </svg>
+  <div class="bpm-tag" id="bpmCounter">72 BPM</div>
+</div>
+
+<main class="app-container">
+
+  <!-- HERO SECTION -->
+  <section class="hero-card">
+    <div class="hero-content-wrap">
+      <!-- Chandrima's Portrait -->
+      <div class="hero-avatar-wrap">
+        <div class="hero-avatar-ring"></div>
+        <img class="hero-avatar" src="image1.png" alt="Dr. Chandrima" loading="eager">
+      </div>
+
+      <div class="pill-badge">
+        <span>MBBS Batch</span> &bull; <span>Class of 2026-31</span>
+      </div>
+      <h1 class="hero-title">Happy Birthday, Chandrima!</h1>
+      <div class="hero-tagline">To Dr. Chandrima</div>
+      <p class="hero-desc">
+        You worked so hard to get here, and now your dream has begun. Wishing you the happiest birthday as you start your journey to becoming a doctor!
+      </p>
+
+      <button class="celebrate-btn" id="confettiBtn">
+        Send Birthday Wishes
+      </button>
+
+      <!-- Key MBBS milestones -->
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-val">5.5 Years</div>
+          <div class="stat-label">Learning & Growing</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val">White Coat</div>
+          <div class="stat-label">Proudly Yours</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val">Always</div>
+          <div class="stat-label">Believing in You</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll down indicator -->
+    <div class="scroll-down-hint">
+      <span>Scroll for your journey</span>
+      <span>&darr;</span>
+    </div>
+  </section>
+
+  <!-- MBBS ROADMAP SECTION -->
+  <section class="section-header">
+    <div class="sub-tag">Your Journey</div>
+    <h2 class="section-h2">The Steps Ahead</h2>
+  </section>
+
+  <div class="mbbs-journey-list">
+    <!-- 1st Year -->
+    <div class="journey-card">
+      <div class="journey-card-top">
+        <div class="year-icon y1-bg">I</div>
+        <div class="year-meta">
+          <div class="year-tag">Year 1 &bull; The Beginning</div>
+          <h3>Starting College & New Books</h3>
+        </div>
+      </div>
+      <p>
+        Your very first steps in medical college! Learning the basics of the human body, meeting new friends, and getting used to thick medical books.
+      </p>
+      <div class="subject-chips">
+        <span class="subject-chip">Anatomy</span>
+        <span class="subject-chip">Physiology</span>
+        <span class="subject-chip">Biochemistry</span>
+      </div>
+    </div>
+
+    <!-- 2nd Year -->
+    <div class="journey-card">
+      <div class="journey-card-top">
+        <div class="year-icon y2-bg">II</div>
+        <div class="year-meta">
+          <div class="year-tag">Year 2 &bull; In the Labs</div>
+          <h3>Microscopes & Medicines</h3>
+        </div>
+      </div>
+      <p>
+        Discovering how medicines work, looking closely through microscopes, and learning how to take care of real patients with kindness.
+      </p>
+      <div class="subject-chips">
+        <span class="subject-chip">Pathology</span>
+        <span class="subject-chip">Pharmacology</span>
+        <span class="subject-chip">Microbiology</span>
+      </div>
+    </div>
+
+    <!-- 3rd Year -->
+    <div class="journey-card">
+      <div class="journey-card-top">
+        <div class="year-icon y3-bg">III</div>
+        <div class="year-meta">
+          <div class="year-tag">Year 3 &bull; Hospital Wards</div>
+          <h3>Hands-on Practice</h3>
+        </div>
+      </div>
+      <p>
+        Spending more time in hospital wards, talking to patients, and understanding community health with care and confidence.
+      </p>
+      <div class="subject-chips">
+        <span class="subject-chip">Eye Care</span>
+        <span class="subject-chip">ENT</span>
+        <span class="subject-chip">Community Health</span>
+      </div>
+    </div>
+
+    <!-- Final Year & Internship -->
+    <div class="journey-card">
+      <div class="journey-card-top">
+        <div class="year-icon y4-bg">IV</div>
+        <div class="year-meta">
+          <div class="year-tag">Final Year & Internship</div>
+          <h3>Dr. Chandrima is Here</h3>
+        </div>
+      </div>
+      <p>
+        Wearing your stethoscope every day, working alongside senior doctors, helping people feel better, and living your dream.
+      </p>
+      <div class="subject-chips">
+        <span class="subject-chip">Medicine</span>
+        <span class="subject-chip">Surgery</span>
+        <span class="subject-chip">Child Health</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- THE OFFICIAL BIRTHDAY Rx PRESCRIPTION -->
+  <div class="rx-card">
+    <div class="rx-header">
+      <div class="rx-brand">
+        <h4>A SPECIAL NOTE FOR YOU</h4>
+        <span>From everyone cheering for you</span>
+      </div>
+      <div class="rx-symbol">&#8478;</div>
+    </div>
+    <div class="rx-details">
+      <span><strong>To:</strong> Chandrima</span>
+      <span><strong>From:</strong> 6 days younger brother</span>
+      <span><strong>For:</strong> Dr. Chandrima</span>
+    </div>
+    <div class="rx-body">
+      <strong>Simple reminders for your MBBS journey:</strong>
+      <div class="rx-prescriptions">
+        <div class="rx-item">
+          <span class="rx-bullet">&bull;</span>
+          <span><strong>Believe in yourself</strong> &mdash; You worked hard to get here, and you can do this.</span>
+        </div>
+        <div class="rx-item">
+          <span class="rx-bullet">&bull;</span>
+          <span><strong>Take breaks & stay happy</strong> &mdash; Rest whenever you need it, and smile often.</span>
+        </div>
+        <div class="rx-item">
+          <span class="rx-bullet">&bull;</span>
+          <span><strong>Enjoy every single day</strong> &mdash; Medical college is a wonderful new chapter.</span>
+        </div>
+        <div class="rx-item">
+          <span class="rx-bullet">&bull;</span>
+          <span><strong>Have a great birthday</strong> &mdash; Celebrate big today!</span>
+        </div>
+      </div>
+      <p style="font-size:0.88rem; color:#64748B; font-style:italic;">
+        "Wear your white coat with pride, keep that bright smile, and know that everyone is so proud of you."
+      </p>
+    </div>
+    <div class="rx-sign">
+      <div class="rx-sign-name">Made for no reason</div>
+      <div class="rx-stamp">Happy Birthday Wish</div>
+    </div>
+  </div>
+
+  <!-- MEMORY GALLERY (Mobile swipe carousel) -->
+  <section class="section-header">
+    <div class="sub-tag">Memories</div>
+    <h2 class="section-h2">Sweet Moments</h2>
+  </section>
+
+  <div class="gallery-scroll-container" id="galleryContainer">
+    <!-- Generated dynamically with real photos / aesthetic gradients -->
+  </div>
+
+  <!-- DAILY DOSE OF AFFIRMATIONS -->
+  <div class="affirmation-box">
+    <div class="sub-tag" style="color:var(--gold)">A Little Encouragement</div>
+    <div class="affirmation-display" id="affirmationText">
+      "You are going to be such a caring and wonderful doctor."
+    </div>
+    <button class="affirmation-btn" id="nextAffirmationBtn">
+      <span>Tap for Another Message</span>
+    </button>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer-love">
+    <h3>Happy Birthday, Chandrima!</h3>
+    <p>Good luck on your MBBS journey!</p>
+    <div style="font-size:0.78rem; color:var(--plum-soft); margin-top:14px;">
+      Made for no reason for your special day (Treat pls)
+    </div>
+  </footer>
+
+</main>
+
+<!-- Lightbox Modal -->
+<div class="lightbox" id="lightbox">
+  <div class="lightbox-card">
+    <div class="lightbox-img-box" id="lightboxImg"></div>
+    <div class="lightbox-text" id="lightboxCap"></div>
+    <button class="lightbox-close-btn" id="lightboxClose">Close</button>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   1. THREE.JS 3D BACKGROUND (Floating capsules, soft pastel colors)
+   ============================================================ */
+let bgScene, bgCamera, bgRenderer;
+let floatingPills = [];
+let floatingSpheres = [];
+
+function initThreeBackground() {
+  const container = document.getElementById('webgl-container');
+  bgScene = new THREE.Scene();
+  bgCamera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+  bgCamera.position.z = 24;
+
+  bgRenderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: "high-performance" });
+  bgRenderer.setSize(window.innerWidth, window.innerHeight);
+  bgRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  container.appendChild(bgRenderer.domElement);
+
+  // Soft Ambient & Point lights for pastel aesthetic on cream
+  const ambient = new THREE.AmbientLight(0xffffff, 1.2);
+  bgScene.add(ambient);
+
+  const light1 = new THREE.DirectionalLight(0xfff5ea, 1.0);
+  light1.position.set(10, 20, 10);
+  bgScene.add(light1);
+
+  const light2 = new THREE.PointLight(0xff9bb2, 1.2, 50);
+  light2.position.set(-10, -10, 10);
+  bgScene.add(light2);
+
+  // Build Floating 3D Capsules (Medicine Pills in pastel tones)
+  for (let i = 0; i < 14; i++) {
+    const pillGroup = new THREE.Group();
+
+    // Pastel colors: Soft rose, sky mint, gold, lavender
+    const colors = [0xff78b6, 0x3aade0, 0x34d399, 0xfbbf24, 0xa78bfa];
+    const pickColor = colors[i % colors.length];
+
+    const capGeo = new THREE.CylinderGeometry(0.32, 0.32, 0.7, 16);
+    const capMat1 = new THREE.MeshPhongMaterial({ color: pickColor, shininess: 90, transparent: true, opacity: 0.65 });
+    const capMat2 = new THREE.MeshPhongMaterial({ color: 0xffffff, shininess: 90, transparent: true, opacity: 0.7 });
+
+    const mesh1 = new THREE.Mesh(capGeo, capMat1);
+    mesh1.position.y = 0.35;
+    const mesh2 = new THREE.Mesh(capGeo, capMat2);
+    mesh2.position.y = -0.35;
+
+    // Caps
+    const domeGeo = new THREE.SphereGeometry(0.32, 16, 16);
+    const dome1 = new THREE.Mesh(domeGeo, capMat1);
+    dome1.position.y = 0.7;
+    const dome2 = new THREE.Mesh(domeGeo, capMat2);
+    dome2.position.y = -0.7;
+
+    pillGroup.add(mesh1, mesh2, dome1, dome2);
+
+    pillGroup.position.set(
+      (Math.random() - 0.5) * 26,
+      (Math.random() - 0.5) * 36,
+      (Math.random() - 0.5) * 15
+    );
+    pillGroup.rotation.set(Math.random() * 3, Math.random() * 3, Math.random() * 3);
+
+    pillGroup.userData = {
+      rotX: (Math.random() - 0.5) * 0.012,
+      rotY: (Math.random() - 0.5) * 0.015,
+      speedY: 0.008 + Math.random() * 0.012
+    };
+
+    bgScene.add(pillGroup);
+    floatingPills.push(pillGroup);
+  }
+
+  // Floating soft spheres
+  const sphereGeo = new THREE.SphereGeometry(0.18, 12, 12);
+  for (let i = 0; i < 24; i++) {
+    const mat = new THREE.MeshPhongMaterial({
+      color: i % 2 === 0 ? 0xffb5d0 : 0xbbe1fa,
+      transparent: true,
+      opacity: 0.55
+    });
+    const sp = new THREE.Mesh(sphereGeo, mat);
+    sp.position.set((Math.random() - 0.5) * 30, (Math.random() - 0.5) * 45, (Math.random() - 0.5) * 16);
+    sp.userData = { speedY: 0.006 + Math.random() * 0.01, wobble: Math.random() * Math.PI };
+    bgScene.add(sp);
+    floatingSpheres.push(sp);
+  }
+
+  window.addEventListener('resize', () => {
+    bgCamera.aspect = window.innerWidth / window.innerHeight;
+    bgCamera.updateProjectionMatrix();
+    bgRenderer.setSize(window.innerWidth, window.innerHeight);
+  });
+}
+
+function animateThreeBackground() {
+  requestAnimationFrame(animateThreeBackground);
+
+  floatingPills.forEach(p => {
+    p.rotation.x += p.userData.rotX;
+    p.rotation.y += p.userData.rotY;
+    p.position.y += p.userData.speedY;
+    if (p.position.y > 20) p.position.y = -20;
+  });
+
+  floatingSpheres.forEach(s => {
+    s.position.y += s.userData.speedY;
+    s.userData.wobble += 0.02;
+    s.position.x += Math.sin(s.userData.wobble) * 0.005;
+    if (s.position.y > 22) s.position.y = -22;
+  });
+
+  bgRenderer.render(bgScene, bgCamera);
+}
+
+/* ============================================================
+   2. PHOTO GALLERY & PLACEHOLDERS (Easily replaceable by user)
+   ============================================================ */
+const USER_PHOTOS = [
+  { id: 1, title: "Dr. Chandrima", caption: "Ready to heal and smile.", src: "image1.png" },
+  { id: 2, title: "Sweet Smile", caption: "That signature radiant smile.", src: "image2.png" },
+  { id: 3, title: "Golden Glow", caption: "Curious, thoughtful, and destined to do great things.", src: "image3.png" },
+  { id: 4, title: "Pure Joy", caption: "The brightest laugh that lights up every room.", src: "image4.png" },
+  { id: 5, title: "Treat De", caption: "Onk bhalo bhalo kotah bole diye chi.. Ebar Treat de", src: "image5.png" },
+];
+
+function buildGallery() {
+  const container = document.getElementById('galleryContainer');
+  container.innerHTML = '';
+
+  USER_PHOTOS.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'gallery-card';
+
+    const box = document.createElement('div');
+    box.className = 'photo-box';
+    if (p.src) {
+      box.style.backgroundImage = `url('${p.src}')`;
+    }
+
+    const cap = document.createElement('div');
+    cap.className = 'photo-caption';
+    cap.innerText = p.title;
+
+    const subCap = document.createElement('div');
+    subCap.className = 'photo-subcaption';
+    subCap.innerText = p.caption;
+
+    card.appendChild(box);
+    card.appendChild(cap);
+    card.appendChild(subCap);
+
+    card.addEventListener('click', () => {
+      openLightbox(p);
+    });
+
+    container.appendChild(card);
+  });
+}
+
+function openLightbox(photo) {
+  const modal = document.getElementById('lightbox');
+  const imgBox = document.getElementById('lightboxImg');
+  const cap = document.getElementById('lightboxCap');
+
+  if (photo.src) {
+    imgBox.style.backgroundImage = `url('${photo.src}')`;
+    imgBox.innerHTML = '';
+  }
+  cap.innerText = photo.caption;
+  modal.classList.add('open');
+}
+
+document.getElementById('lightboxClose').addEventListener('click', () => {
+  document.getElementById('lightbox').classList.remove('open');
+});
+document.getElementById('lightbox').addEventListener('click', (e) => {
+  if (e.target.id === 'lightbox') {
+    document.getElementById('lightbox').classList.remove('open');
+  }
+});
+
+
+
+/* ============================================================
+   5. DOCTOR AFFIRMATIONS CAROUSEL
+   ============================================================ */
+const AFFIRMATIONS = [
+  "\"You are going to be such a caring and wonderful doctor.\"",
+  "\"Whenever things feel hard, remember how capable and strong you are.\"",
+  "\"Medical college is going to bring so many amazing memories and friends.\"",
+  "\"Everyone is so proud of you and cheering you on every step of the way.\"",
+  "\"Keep smiling, study with joy, and enjoy this special chapter!\""
+];
+let currentAffIndex = 0;
+const affText = document.getElementById('affirmationText');
+const affBtn = document.getElementById('nextAffirmationBtn');
+
+affBtn.addEventListener('click', () => {
+  currentAffIndex = (currentAffIndex + 1) % AFFIRMATIONS.length;
+  affText.style.opacity = 0;
+  setTimeout(() => {
+    affText.innerText = AFFIRMATIONS[currentAffIndex];
+    affText.style.opacity = 1;
+  }, 200);
+});
+
+/* ============================================================
+   6. BIRTHDAY BLESSINGS CONFETTI
+   ============================================================ */
+function triggerConfetti(intensity = 1) {
+  if (typeof confetti === 'function') {
+    confetti({
+      particleCount: Math.floor(70 * intensity),
+      spread: 60,
+      origin: { y: 0.75 },
+      colors: ['#FF6584', '#38BDF8', '#34D399', '#FBBF24', '#FFA8CC']
+    });
+  }
+}
+
+document.getElementById('confettiBtn').addEventListener('click', () => {
+  triggerConfetti(1.5);
+  setTimeout(() => {
+    confetti({
+      particleCount: 50,
+      angle: 60,
+      spread: 55,
+      origin: { x: 0 }
+    });
+    confetti({
+      particleCount: 50,
+      angle: 120,
+      spread: 55,
+      origin: { x: 1 }
+    });
+  }, 250);
+});
+
+/* ============================================================
+   INIT EVERYTHING ON LOAD
+   ============================================================ */
+window.addEventListener('DOMContentLoaded', () => {
+  initThreeBackground();
+  animateThreeBackground();
+  buildGallery();
+
+  // Initial welcome confetti burst
+  setTimeout(() => {
+    triggerConfetti(0.8);
+  }, 800);
+});
+</script>
+</body>
+</html>
