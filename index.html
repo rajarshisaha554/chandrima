@@ -814,6 +814,11 @@
     box-shadow: 0 4px 14px rgba(236, 72, 153, 0.38);
     color: #FFFFFF !important;
   }
+  .nav-btn.active.nishantika-active {
+    background: linear-gradient(135deg, #FF6B81, #FF8E53);
+    box-shadow: 0 4px 14px rgba(255, 107, 129, 0.38);
+    color: #FFFFFF !important;
+  }
   .nav-btn.active.musketers-active {
     background: linear-gradient(135deg, #0D9488, #059669);
     box-shadow: 0 4px 14px rgba(13, 148, 136, 0.38);
@@ -882,6 +887,10 @@
       <a href="sanghati.html" class="nav-btn" id="tabBtnSanghati" aria-label="Sanghati Tab">
         <span class="nav-icon">🌸</span>
         <span class="nav-label">Sanghati</span>
+      </a>
+      <a href="nishantika.html" class="nav-btn" id="tabBtnNishantika" aria-label="Nishantika Tab">
+        <span class="nav-icon">🌷</span>
+        <span class="nav-label">Nishantika</span>
       </a>
       <a href="musketers.html" class="nav-btn" id="tabBtnMusketeers" aria-label="Musketeers Tab">
         <span class="nav-icon">✨</span>
@@ -1359,7 +1368,7 @@ window.addEventListener('DOMContentLoaded', () => {
   buildGallery();
 
   const activeNav = document.querySelector('.nav-btn.active');
-  if (activeNav) {
+  if (activeNav && activeNav.id !== 'tabBtnDoctor') {
     activeNav.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
   }
 
