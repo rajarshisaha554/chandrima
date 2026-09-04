@@ -131,93 +131,111 @@
   }
 
   /* =========================================================
-     TAB NAVIGATION BAR (Responsive Mobile Pill Track)
+     TAB NAVIGATION BAR (Horizontally Scrollable Mobile Pill Track)
      ========================================================= */
   .page-nav-wrapper {
     margin: 8px auto 16px;
     width: 100%;
-    max-width: 480px;
+    max-width: 580px;
     position: sticky;
-    top: 50px;
+    top: 48px;
     z-index: 95;
-    padding: 0 2px;
+    padding: 0 10px;
+    box-sizing: border-box;
   }
   .nav-segmented {
     display: flex;
     align-items: center;
-    background: rgba(255, 255, 255, 0.94);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--border-color);
     border-radius: 999px;
-    padding: 4px;
-    box-shadow: 0 8px 24px rgba(126, 34, 206, 0.09);
-    gap: 4px;
+    padding: 4px 6px;
+    box-shadow: 0 4px 18px rgba(126, 34, 206, 0.08);
+    gap: 6px;
+    width: 100%;
+    box-sizing: border-box;
     overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+    overflow-y: hidden;
     scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
     scroll-behavior: smooth;
   }
   .nav-segmented::-webkit-scrollbar {
     display: none;
   }
   .nav-btn {
-    flex-shrink: 0;
+    flex: 0 0 auto;
     border: none;
     background: transparent;
-    padding: 8px 14px;
     border-radius: 999px;
     font-family: var(--font-body);
-    font-size: 0.8rem;
     font-weight: 700;
+    font-size: 0.82rem;
     color: #64748B;
     cursor: pointer;
     text-decoration: none;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 5px;
+    gap: 6px;
     white-space: nowrap;
-    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 8px 16px;
+    -webkit-tap-highlight-color: transparent;
   }
   .nav-btn:hover {
     color: var(--plum-dark);
   }
+  .nav-btn:active {
+    transform: scale(0.96);
+  }
+  .nav-icon {
+    font-size: 0.95rem;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .nav-label {
+    font-size: 0.82rem;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+
   .nav-btn.active {
     background: linear-gradient(135deg, #FF6584, #E11D48);
-    color: #FFFFFF;
-    box-shadow: 0 4px 14px rgba(225, 29, 72, 0.35);
+    color: #FFFFFF !important;
+    box-shadow: 0 4px 14px rgba(225, 29, 72, 0.38);
   }
   .nav-btn.active.sankha-active {
     background: linear-gradient(135deg, #F59E0B, #EA580C);
-    box-shadow: 0 4px 14px rgba(234, 88, 12, 0.35);
-    color: #FFFFFF;
+    box-shadow: 0 4px 14px rgba(234, 88, 12, 0.38);
+    color: #FFFFFF !important;
   }
   .nav-btn.active.debjit-active {
     background: linear-gradient(135deg, #7E22CE, #9333EA);
-    box-shadow: 0 4px 14px rgba(126, 34, 206, 0.35);
-    color: #FFFFFF;
+    box-shadow: 0 4px 14px rgba(126, 34, 206, 0.38);
+    color: #FFFFFF !important;
+  }
+  .nav-btn.active.sanghati-active {
+    background: linear-gradient(135deg, #EC4899, #8B5CF6);
+    box-shadow: 0 4px 14px rgba(236, 72, 153, 0.38);
+    color: #FFFFFF !important;
   }
   .nav-btn.active.musketers-active {
     background: linear-gradient(135deg, #0D9488, #059669);
-    box-shadow: 0 4px 14px rgba(13, 148, 136, 0.35);
-    color: #FFFFFF;
+    box-shadow: 0 4px 14px rgba(13, 148, 136, 0.38);
+    color: #FFFFFF !important;
   }
-  .nav-pulse-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: #10B981;
-    display: inline-block;
-    box-shadow: 0 0 6px rgba(16, 185, 129, 0.6);
-  }
-  @media (min-width: 440px) {
+
+  /* Wider screens: center items cleanly */
+  @media (min-width: 600px) {
     .nav-segmented {
       justify-content: center;
+      padding: 5px 8px;
     }
     .nav-btn {
-      flex: 1;
-      padding: 9px 8px;
+      padding: 9px 18px;
     }
   }
 
@@ -563,23 +581,30 @@
 
 <main class="app-container">
 
-  <!-- TOP PAGE NAVIGATION -->
+  <!-- TOP PAGE NAVIGATION (5 TABS) -->
   <div class="page-nav-wrapper">
-    <div class="nav-segmented">
-      <a href="index.html" class="nav-btn" id="tabBtnDoctor">
-        <span>🩺 Dr. Chandrima</span>
+    <nav class="nav-segmented" aria-label="Page navigation">
+      <a href="index.html" class="nav-btn" id="tabBtnDoctor" aria-label="Dr. Chandrima Tab">
+        <span class="nav-icon">🩺</span>
+        <span class="nav-label">Dr. Chandrima</span>
       </a>
-      <a href="sankha.html" class="nav-btn" id="tabBtnSankha">
-        <span class="nav-pulse-dot"></span>
-        <span>🎒 Sankha</span>
+      <a href="sankha.html" class="nav-btn" id="tabBtnSankha" aria-label="Sankha Tab">
+        <span class="nav-icon">🎒</span>
+        <span class="nav-label">Sankha</span>
       </a>
-      <a href="debjit.html" class="nav-btn active debjit-active" id="tabBtnDebjit">
-        <span>👻 Debjit</span>
+      <a href="debjit.html" class="nav-btn active debjit-active" id="tabBtnDebjit" aria-label="Debjit Tab">
+        <span class="nav-icon">👻</span>
+        <span class="nav-label">Debjit</span>
       </a>
-      <a href="musketers.html" class="nav-btn" id="tabBtnMusketeers">
-        <span>✨ Musketeers</span>
+      <a href="sanghati.html" class="nav-btn" id="tabBtnSanghati" aria-label="Sanghati Tab">
+        <span class="nav-icon">🌸</span>
+        <span class="nav-label">Sanghati</span>
       </a>
-    </div>
+      <a href="musketers.html" class="nav-btn" id="tabBtnMusketeers" aria-label="Musketeers Tab">
+        <span class="nav-icon">✨</span>
+        <span class="nav-label">Musketeers</span>
+      </a>
+    </nav>
   </div>
 
   <!-- HERO SECTION: SOFT LAVENDER & PLUM CARD -->

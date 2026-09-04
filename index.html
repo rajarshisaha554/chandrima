@@ -723,50 +723,58 @@
   }
 
   /* =========================================================
-     TAB NAVIGATION BAR (Mobile-Optimized Segmented Pill Bar)
+     TAB NAVIGATION BAR (Horizontally Scrollable Mobile Pill Track)
      ========================================================= */
   .page-nav-wrapper {
-    margin: 6px auto 14px;
+    margin: 8px auto 16px;
     width: 100%;
-    max-width: 480px;
+    max-width: 580px;
     position: sticky;
     top: 48px;
     z-index: 95;
-    padding: 0 8px;
+    padding: 0 10px;
     box-sizing: border-box;
   }
   .nav-segmented {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    background: rgba(255, 255, 255, 0.96);
+    background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--cream-card-border);
     border-radius: 999px;
-    padding: 3px;
-    box-shadow: 0 4px 16px rgba(36, 48, 74, 0.08);
-    gap: 2px;
+    padding: 4px 6px;
+    box-shadow: 0 4px 18px rgba(36, 48, 74, 0.08);
+    gap: 6px;
     width: 100%;
     box-sizing: border-box;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+  .nav-segmented::-webkit-scrollbar {
+    display: none;
   }
   .nav-btn {
+    flex: 0 0 auto;
     border: none;
     background: transparent;
     border-radius: 999px;
     font-family: var(--font-body);
     font-weight: 700;
+    font-size: 0.82rem;
     color: var(--plum-soft);
     cursor: pointer;
     text-decoration: none;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 4px;
+    gap: 6px;
     white-space: nowrap;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    min-width: 0;
-    padding: 7px 4px;
+    padding: 8px 16px;
     -webkit-tap-highlight-color: transparent;
   }
   .nav-btn:hover {
@@ -776,76 +784,50 @@
     transform: scale(0.96);
   }
   .nav-icon {
-    font-size: 0.85rem;
+    font-size: 0.95rem;
     line-height: 1;
     flex-shrink: 0;
   }
   .nav-label {
-    font-size: 0.72rem;
+    font-size: 0.82rem;
     line-height: 1.2;
     white-space: nowrap;
   }
 
-  /* Mobile Proportional Sizing (all 4 tabs fit effortlessly on any screen) */
-  #tabBtnDoctor { flex: 1.35 1 0; }
-  #tabBtnSankha { flex: 0.95 1 0; }
-  #tabBtnDebjit { flex: 0.95 1 0; }
-  #tabBtnMusketeers { flex: 1.15 1 0; }
-
   .nav-btn.active {
     background: linear-gradient(135deg, #FF6584, #E11D48);
     color: #FFFFFF !important;
-    box-shadow: 0 3px 12px rgba(225, 29, 72, 0.35);
+    box-shadow: 0 4px 14px rgba(225, 29, 72, 0.38);
   }
   .nav-btn.active.sankha-active {
     background: linear-gradient(135deg, #F59E0B, #EA580C);
-    box-shadow: 0 3px 12px rgba(234, 88, 12, 0.35);
+    box-shadow: 0 4px 14px rgba(234, 88, 12, 0.38);
     color: #FFFFFF !important;
   }
   .nav-btn.active.debjit-active {
     background: linear-gradient(135deg, #7E22CE, #9333EA);
-    box-shadow: 0 3px 12px rgba(126, 34, 206, 0.35);
+    box-shadow: 0 4px 14px rgba(126, 34, 206, 0.38);
+    color: #FFFFFF !important;
+  }
+  .nav-btn.active.sanghati-active {
+    background: linear-gradient(135deg, #EC4899, #8B5CF6);
+    box-shadow: 0 4px 14px rgba(236, 72, 153, 0.38);
     color: #FFFFFF !important;
   }
   .nav-btn.active.musketers-active {
     background: linear-gradient(135deg, #0D9488, #059669);
-    box-shadow: 0 3px 12px rgba(13, 148, 136, 0.35);
+    box-shadow: 0 4px 14px rgba(13, 148, 136, 0.38);
     color: #FFFFFF !important;
   }
 
-  /* Ultra-small screens (e.g. 320px - 350px) */
-  @media (max-width: 350px) {
-    .page-nav-wrapper {
-      padding: 0 4px;
-    }
-    .nav-btn {
-      padding: 6px 2px;
-      gap: 2px;
-    }
-    .nav-icon {
-      font-size: 0.78rem;
-    }
-    .nav-label {
-      font-size: 0.66rem;
-    }
-  }
-
-  /* Tablet / Desktop wider screens */
-  @media (min-width: 480px) {
+  /* Wider screens: center items cleanly */
+  @media (min-width: 600px) {
     .nav-segmented {
-      padding: 4px;
-      gap: 4px;
+      justify-content: center;
+      padding: 5px 8px;
     }
     .nav-btn {
-      flex: 1 1 0 !important;
-      padding: 9px 8px;
-      gap: 6px;
-    }
-    .nav-icon {
-      font-size: 0.95rem;
-    }
-    .nav-label {
-      font-size: 0.82rem;
+      padding: 9px 18px;
     }
   }
 
@@ -896,6 +878,10 @@
       <a href="debjit.html" class="nav-btn" id="tabBtnDebjit" aria-label="Debjit Tab">
         <span class="nav-icon">👻</span>
         <span class="nav-label">Debjit</span>
+      </a>
+      <a href="sanghati.html" class="nav-btn" id="tabBtnSanghati" aria-label="Sanghati Tab">
+        <span class="nav-icon">🌸</span>
+        <span class="nav-label">Sanghati</span>
       </a>
       <a href="musketers.html" class="nav-btn" id="tabBtnMusketeers" aria-label="Musketeers Tab">
         <span class="nav-icon">✨</span>
