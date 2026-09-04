@@ -14,17 +14,15 @@
 
   <style>
     :root {
-      --bg: #0B0F19;
-      --bg-gradient: radial-gradient(circle at 50% 0%, #1A1733 0%, #0B0F19 60%, #070A10 100%);
-      --card-bg: rgba(255, 255, 255, 0.04);
-      --card-border: rgba(255, 255, 255, 0.08);
-      --card-hover-border: rgba(244, 114, 182, 0.35);
-      --accent-cyan: #38BDF8;
-      --accent-pink: #F472B6;
-      --accent-purple: #C084FC;
-      --accent-gold: #FCD34D;
-      --text-main: #F8FAFC;
-      --text-muted: #94A3B8;
+      --bg: #FFF7FA;
+      --bg-gradient: radial-gradient(circle at 50% 0%, #FFE8F2 0%, #FFF7FA 50%, #FAF5FF 100%);
+      --card-bg: rgba(255, 255, 255, 0.94);
+      --card-border: rgba(236, 72, 153, 0.18);
+      --pink-main: #EC4899;
+      --pink-dark: #BE185D;
+      --purple-accent: #8B5CF6;
+      --slate-dark: #1E293B;
+      --slate-muted: #64748B;
       --font-body: 'Plus Jakarta Sans', sans-serif;
       --font-title: 'Playfair Display', serif;
       --font-hand: 'Caveat', cursive;
@@ -40,7 +38,7 @@
       background-color: var(--bg);
       background-image: var(--bg-gradient);
       background-attachment: fixed;
-      color: var(--text-main);
+      color: var(--slate-dark);
       font-family: var(--font-body);
       line-height: 1.6;
       padding-bottom: 70px;
@@ -49,8 +47,8 @@
       position: relative;
     }
 
-    /* Ambient Twinkling Stars Background */
-    #stars-canvas {
+    /* Ambient Floating Floating Particles Canvas */
+    #ambient-canvas {
       position: fixed;
       top: 0;
       left: 0;
@@ -68,8 +66,8 @@
       z-index: 100;
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
-      background: rgba(11, 15, 25, 0.85);
-      border-bottom: 1px solid rgba(244, 114, 182, 0.15);
+      background: rgba(255, 255, 255, 0.88);
+      border-bottom: 1px solid rgba(236, 72, 153, 0.15);
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -83,35 +81,36 @@
       display: flex;
       align-items: center;
       gap: 7px;
-      color: #FDF2F8;
+      color: var(--pink-dark);
     }
 
     .pulse-dot {
       width: 8px;
       height: 8px;
-      background: var(--accent-pink);
+      background: var(--pink-main);
       border-radius: 50%;
-      box-shadow: 0 0 10px var(--accent-pink);
-      animation: starlightPulse 1.8s infinite;
+      box-shadow: 0 0 10px var(--pink-main);
+      animation: pulseGlow 1.8s infinite;
     }
 
-    @keyframes starlightPulse {
-      0% { transform: scale(0.9); opacity: 0.7; box-shadow: 0 0 6px var(--accent-pink); }
-      50% { transform: scale(1.3); opacity: 1; box-shadow: 0 0 14px var(--accent-pink); }
-      100% { transform: scale(0.9); opacity: 0.7; box-shadow: 0 0 6px var(--accent-pink); }
+    @keyframes pulseGlow {
+      0% { transform: scale(0.9); opacity: 0.7; }
+      50% { transform: scale(1.3); opacity: 1; }
+      100% { transform: scale(0.9); opacity: 0.7; }
     }
 
     .status-tag {
-      color: var(--accent-cyan);
-      background: rgba(56, 189, 248, 0.12);
+      color: var(--pink-dark);
+      background: rgba(236, 72, 153, 0.1);
       padding: 4px 10px;
       border-radius: 9999px;
-      border: 1px solid rgba(56, 189, 248, 0.25);
+      border: 1px solid rgba(236, 72, 153, 0.22);
       font-size: 0.75rem;
+      font-weight: 700;
     }
 
     /* =========================================================
-       5-PAGE NAVIGATION BAR (Horizontally Scrollable Mobile Pill Track)
+       HORIZONTALLY SCROLLABLE 6-PAGE NAVBAR
        ========================================================= */
     .page-nav-wrapper {
       margin: 8px auto 16px;
@@ -126,13 +125,13 @@
     .nav-segmented {
       display: flex;
       align-items: center;
-      background: rgba(20, 26, 43, 0.92);
+      background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.14);
+      border: 1px solid rgba(236, 72, 153, 0.18);
       border-radius: 999px;
       padding: 4px 6px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 4px 18px rgba(236, 72, 153, 0.08);
       gap: 6px;
       width: 100%;
       box-sizing: border-box;
@@ -153,7 +152,7 @@
       font-family: var(--font-body);
       font-weight: 700;
       font-size: 0.82rem;
-      color: #94A3B8;
+      color: #64748B;
       cursor: pointer;
       text-decoration: none;
       display: inline-flex;
@@ -166,7 +165,7 @@
       -webkit-tap-highlight-color: transparent;
     }
     .nav-btn:hover {
-      color: #F8FAFC;
+      color: var(--slate-dark);
     }
     .nav-btn:active {
       transform: scale(0.96);
@@ -185,11 +184,10 @@
     .nav-btn.active {
       background: linear-gradient(135deg, #EC4899, #8B5CF6);
       color: #FFFFFF !important;
-      box-shadow: 0 4px 14px rgba(236, 72, 153, 0.45);
+      box-shadow: 0 4px 14px rgba(236, 72, 153, 0.38);
     }
 
-    /* Wider screens: center items cleanly */
-    @media (min-width: 600px) {
+    @media (min-width: 650px) {
       .nav-segmented {
         justify-content: center;
         padding: 5px 8px;
@@ -201,7 +199,7 @@
 
     /* Main Container */
     .container {
-      max-width: 620px;
+      max-width: 580px;
       margin: 0 auto;
       padding: 0 16px;
       position: relative;
@@ -210,27 +208,29 @@
 
     /* Hero Section */
     .hero-card {
-      background: radial-gradient(circle at 50% 0%, rgba(244, 114, 182, 0.12) 0%, rgba(255, 255, 255, 0.03) 70%);
-      border: 1px solid rgba(244, 114, 182, 0.25);
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
       border-radius: 28px;
-      padding: 32px 20px 24px;
+      padding: 34px 20px 28px;
       text-align: center;
       position: relative;
       overflow: hidden;
-      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
+      box-shadow: 0 16px 36px rgba(236, 72, 153, 0.08);
       margin-bottom: 24px;
     }
 
     .hero-card::before {
       content: '';
       position: absolute;
-      top: -40px;
+      top: -30px;
       left: 50%;
       transform: translateX(-50%);
-      width: 200px;
-      height: 100px;
-      background: radial-gradient(circle, rgba(244, 114, 182, 0.3) 0%, transparent 70%);
-      filter: blur(30px);
+      width: 220px;
+      height: 90px;
+      background: radial-gradient(circle, rgba(236, 72, 153, 0.22) 0%, transparent 70%);
+      filter: blur(25px);
       pointer-events: none;
     }
 
@@ -243,11 +243,11 @@
 
     .avatar-ring {
       position: absolute;
-      inset: -6px;
+      inset: -5px;
       border-radius: 50%;
-      background: conic-gradient(from 0deg, #F472B6, #8B5CF6, #38BDF8, #F472B6);
+      background: conic-gradient(from 0deg, #EC4899, #8B5CF6, #F472B6, #EC4899);
       animation: rotateRing 6s linear infinite;
-      filter: blur(2px);
+      filter: blur(1.5px);
     }
 
     @keyframes rotateRing {
@@ -261,22 +261,22 @@
       border-radius: 50%;
       object-fit: cover;
       object-position: top center;
-      border: 3px solid #0B0F19;
-      box-shadow: 0 0 20px rgba(244, 114, 182, 0.4);
-      background: #111827;
+      border: 3px solid #FFFFFF;
+      box-shadow: 0 8px 24px rgba(236, 72, 153, 0.28);
+      background: #FFF5F7;
     }
 
     .nickname-badge {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      font-size: 0.72rem;
+      font-size: 0.75rem;
       text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.08em;
       font-weight: 800;
-      color: #FDF2F8;
-      background: linear-gradient(135deg, rgba(244, 114, 182, 0.25), rgba(139, 92, 246, 0.25));
-      border: 1px solid rgba(244, 114, 182, 0.4);
+      color: var(--pink-dark);
+      background: rgba(236, 72, 153, 0.1);
+      border: 1px solid rgba(236, 72, 153, 0.25);
       padding: 5px 14px;
       border-radius: 9999px;
       margin-bottom: 12px;
@@ -284,33 +284,33 @@
 
     .hero-card h1 {
       font-family: var(--font-title);
-      font-size: 2.1rem;
+      font-size: 2.2rem;
       font-weight: 700;
       margin-bottom: 6px;
       line-height: 1.25;
-      background: linear-gradient(135deg, #FFFFFF 30%, #F472B6 70%, #C084FC 100%);
+      background: linear-gradient(135deg, #BE185D, #EC4899, #8B5CF6);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
     .hero-subtitle {
-      color: var(--accent-cyan);
-      font-size: 0.95rem;
-      font-weight: 600;
-      margin-bottom: 14px;
-      letter-spacing: 0.02em;
+      font-family: var(--font-hand);
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--pink-dark);
+      margin-bottom: 12px;
     }
 
     .hero-bio {
-      color: #CBD5E1;
-      font-size: 0.95rem;
+      color: var(--slate-muted);
+      font-size: 0.98rem;
       max-width: 480px;
       margin: 0 auto 20px;
       line-height: 1.65;
     }
 
     .hero-bio strong {
-      color: #FDF2F8;
+      color: var(--slate-dark);
       font-weight: 700;
     }
 
@@ -319,33 +319,34 @@
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 10px;
-      margin-bottom: 20px;
+      margin-bottom: 22px;
     }
 
     .stat-card {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: #FFFFFF;
+      border: 1px solid rgba(236, 72, 153, 0.14);
       border-radius: 16px;
       padding: 12px 6px;
       text-align: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
       transition: all 0.2s ease;
     }
     .stat-card:hover {
-      background: rgba(244, 114, 182, 0.08);
-      border-color: rgba(244, 114, 182, 0.3);
+      border-color: rgba(236, 72, 153, 0.35);
       transform: translateY(-2px);
+      box-shadow: 0 8px 18px rgba(236, 72, 153, 0.12);
     }
 
     .stat-card .val {
       font-weight: 800;
       font-size: 0.88rem;
-      color: var(--accent-pink);
+      color: var(--pink-dark);
       line-height: 1.2;
     }
 
     .stat-card .desc {
       font-size: 0.72rem;
-      color: var(--text-muted);
+      color: var(--slate-muted);
       margin-top: 3px;
     }
 
@@ -363,15 +364,15 @@
       background: linear-gradient(135deg, #EC4899, #8B5CF6);
       color: #FFFFFF;
       font-family: var(--font-body);
-      font-size: 0.92rem;
+      font-size: 0.95rem;
       font-weight: 700;
       cursor: pointer;
-      box-shadow: 0 6px 20px rgba(236, 72, 153, 0.4);
+      box-shadow: 0 6px 20px rgba(236, 72, 153, 0.35);
       transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
     .btn-send-love:hover {
       transform: translateY(-2px) scale(1.02);
-      box-shadow: 0 10px 26px rgba(236, 72, 153, 0.55);
+      box-shadow: 0 10px 26px rgba(236, 72, 153, 0.48);
     }
     .btn-send-love:active {
       transform: scale(0.97);
@@ -379,7 +380,7 @@
 
     /* Section Title */
     .section-title {
-      margin: 36px 0 18px;
+      margin: 32px 0 18px;
       text-align: center;
     }
 
@@ -388,7 +389,7 @@
       font-weight: 800;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: var(--accent-cyan);
+      color: var(--pink-dark);
       display: block;
       margin-bottom: 4px;
     }
@@ -397,9 +398,7 @@
       font-family: var(--font-title);
       font-size: 1.65rem;
       font-weight: 700;
-      background: linear-gradient(135deg, #FFFFFF, #E2E8F0);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      color: var(--slate-dark);
     }
 
     /* =========================================================
@@ -408,7 +407,7 @@
     .scrapbook-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
+      gap: 14px;
       margin-bottom: 28px;
     }
 
@@ -416,17 +415,17 @@
       position: relative;
       border-radius: 18px;
       overflow: hidden;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+      background: #FFFFFF;
+      border: 1px solid rgba(236, 72, 153, 0.16);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
       cursor: pointer;
       transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
     .photo-item:hover {
       transform: translateY(-4px) scale(1.02);
-      border-color: rgba(244, 114, 182, 0.5);
-      box-shadow: 0 12px 30px rgba(244, 114, 182, 0.25);
+      border-color: rgba(236, 72, 153, 0.45);
+      box-shadow: 0 14px 32px rgba(236, 72, 153, 0.18);
     }
 
     .photo-item img {
@@ -434,15 +433,14 @@
       height: 100%;
       object-fit: cover;
       display: block;
-      aspect-ratio: 1 / 1.15;
+      aspect-ratio: 1 / 1.18;
       transition: transform 0.4s ease;
     }
 
     .photo-item:hover img {
-      transform: scale(1.05);
+      transform: scale(1.04);
     }
 
-    /* Highlight certain photos to make the grid asymmetrical & lively */
     .photo-item.span-2 {
       grid-column: span 2;
     }
@@ -455,15 +453,15 @@
       bottom: 8px;
       left: 8px;
       right: 8px;
-      background: rgba(11, 15, 25, 0.75);
+      background: rgba(255, 255, 255, 0.88);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(236, 72, 153, 0.15);
       border-radius: 999px;
-      padding: 4px 10px;
-      font-size: 0.72rem;
+      padding: 5px 10px;
+      font-size: 0.74rem;
       font-weight: 700;
-      color: #F8FAFC;
+      color: var(--slate-dark);
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -474,15 +472,16 @@
       position: absolute;
       top: 8px;
       right: 8px;
-      width: 22px;
-      height: 22px;
-      background: rgba(244, 114, 182, 0.85);
+      width: 24px;
+      height: 24px;
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid rgba(236, 72, 153, 0.2);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.7rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+      font-size: 0.75rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       z-index: 2;
     }
 
@@ -490,18 +489,18 @@
        INTERACTIVE COMFORT JAR / DAILY DOSE OF HOPE WIDGET
        ========================================================= */
     .comfort-jar-box {
-      background: linear-gradient(135deg, rgba(244, 114, 182, 0.1), rgba(139, 92, 246, 0.1));
-      border: 1px dashed rgba(244, 114, 182, 0.4);
+      background: #FFFFFF;
+      border: 1px dashed rgba(236, 72, 153, 0.35);
       border-radius: 24px;
       padding: 24px 18px;
       text-align: center;
       margin: 28px 0;
       position: relative;
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.25);
+      box-shadow: 0 10px 28px rgba(236, 72, 153, 0.06);
     }
 
     .comfort-jar-icon {
-      font-size: 2.2rem;
+      font-size: 2.4rem;
       margin-bottom: 8px;
       display: inline-block;
       animation: gentleFloat 3s ease-in-out infinite;
@@ -514,20 +513,20 @@
 
     .comfort-jar-box h3 {
       font-family: var(--font-title);
-      font-size: 1.25rem;
-      color: #FDF2F8;
+      font-size: 1.3rem;
+      color: var(--slate-dark);
       margin-bottom: 6px;
     }
 
     .comfort-jar-box p {
-      font-size: 0.85rem;
-      color: var(--text-muted);
+      font-size: 0.88rem;
+      color: var(--slate-muted);
       margin-bottom: 16px;
     }
 
     .hope-display-card {
-      background: rgba(11, 15, 25, 0.9);
-      border: 1px solid rgba(244, 114, 182, 0.3);
+      background: #FFF7FA;
+      border: 1px solid rgba(236, 72, 153, 0.2);
       border-radius: 16px;
       padding: 16px;
       margin-bottom: 16px;
@@ -537,20 +536,20 @@
       justify-content: center;
       text-align: center;
       font-family: var(--font-hand);
-      font-size: 1.25rem;
-      color: #FDE047;
-      line-height: 1.4;
+      font-size: 1.35rem;
+      color: var(--pink-dark);
+      line-height: 1.45;
       transition: all 0.3s ease;
     }
 
     .btn-draw-hope {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(244, 114, 182, 0.4);
-      color: #FDF2F8;
-      padding: 9px 20px;
+      background: rgba(236, 72, 153, 0.08);
+      border: 1px solid rgba(236, 72, 153, 0.35);
+      color: var(--pink-dark);
+      padding: 10px 22px;
       border-radius: 999px;
       font-family: var(--font-body);
-      font-size: 0.82rem;
+      font-size: 0.85rem;
       font-weight: 700;
       cursor: pointer;
       display: inline-flex;
@@ -559,8 +558,7 @@
       transition: all 0.2s ease;
     }
     .btn-draw-hope:hover {
-      background: rgba(244, 114, 182, 0.2);
-      border-color: var(--accent-pink);
+      background: rgba(236, 72, 153, 0.16);
     }
     .btn-draw-hope:active {
       transform: scale(0.96);
@@ -577,17 +575,18 @@
     }
 
     .timeline-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
+      background: #FFFFFF;
+      border: 1px solid rgba(236, 72, 153, 0.14);
       border-radius: 20px;
       padding: 18px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.03);
       transition: transform 0.25s ease, border-color 0.25s ease;
     }
 
     .timeline-card:hover {
       transform: translateY(-2px);
-      border-color: var(--card-hover-border);
-      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(236, 72, 153, 0.35);
+      box-shadow: 0 10px 24px rgba(236, 72, 153, 0.1);
     }
 
     .card-header {
@@ -601,9 +600,9 @@
       width: 38px;
       height: 38px;
       border-radius: 12px;
-      background: rgba(244, 114, 182, 0.15);
-      border: 1px solid rgba(244, 114, 182, 0.3);
-      color: var(--accent-pink);
+      background: rgba(236, 72, 153, 0.1);
+      border: 1px solid rgba(236, 72, 153, 0.2);
+      color: var(--pink-main);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -615,20 +614,20 @@
     .card-title-group h3 {
       font-size: 1rem;
       font-weight: 700;
-      color: #F8FAFC;
+      color: var(--slate-dark);
     }
 
     .card-title-group span {
       font-size: 0.72rem;
-      color: var(--accent-cyan);
+      color: var(--pink-dark);
       text-transform: uppercase;
       letter-spacing: 0.06em;
       font-weight: 700;
     }
 
     .card-text {
-      color: #94A3B8;
-      font-size: 0.88rem;
+      color: var(--slate-muted);
+      font-size: 0.9rem;
       line-height: 1.6;
       margin-bottom: 12px;
     }
@@ -640,26 +639,26 @@
     }
 
     .tag {
-      font-size: 0.7rem;
+      font-size: 0.72rem;
       font-weight: 600;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: #FFF5F7;
+      border: 1px solid rgba(236, 72, 153, 0.15);
       padding: 3px 10px;
       border-radius: 9999px;
-      color: #CBD5E1;
+      color: var(--pink-dark);
     }
 
     /* =========================================================
        NOTE CARD: A PROMISE & A REMINDER
        ========================================================= */
     .note-card {
-      background: linear-gradient(145deg, rgba(244, 114, 182, 0.06) 0%, rgba(139, 92, 246, 0.04) 100%);
-      border: 1px dashed rgba(244, 114, 182, 0.4);
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(255, 240, 245, 0.8));
+      border: 1px dashed rgba(236, 72, 153, 0.4);
       border-radius: 24px;
       padding: 24px 20px;
       margin-top: 32px;
       position: relative;
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+      box-shadow: 0 10px 28px rgba(236, 72, 153, 0.08);
     }
 
     .rx-symbol {
@@ -667,14 +666,14 @@
       top: 14px;
       right: 18px;
       font-size: 2rem;
-      opacity: 0.5;
+      opacity: 0.4;
     }
 
     .note-header {
       font-size: 0.75rem;
       letter-spacing: 0.12em;
       font-weight: 800;
-      color: var(--accent-pink);
+      color: var(--pink-dark);
       margin-bottom: 12px;
       text-transform: uppercase;
     }
@@ -682,15 +681,15 @@
     .meta-row {
       display: flex;
       justify-content: space-between;
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 0.82rem;
+      color: var(--slate-muted);
+      border-bottom: 1px solid rgba(236, 72, 153, 0.15);
       padding-bottom: 10px;
       margin-bottom: 14px;
     }
 
     .meta-row strong {
-      color: #F8FAFC;
+      color: var(--slate-dark);
     }
 
     .reminders-list {
@@ -698,34 +697,32 @@
       display: flex;
       flex-direction: column;
       gap: 12px;
-      font-size: 0.88rem;
-      color: #CBD5E1;
+      font-size: 0.9rem;
+      color: var(--slate-dark);
       margin-bottom: 16px;
     }
 
     .reminders-list li strong {
-      color: #FDF2F8;
+      color: var(--pink-dark);
     }
 
     .quote-box {
       font-family: var(--font-hand);
-      font-size: 1.18rem;
-      color: var(--accent-cyan);
-      border-left: 2px solid var(--accent-pink);
+      font-size: 1.3rem;
+      color: var(--pink-dark);
+      border-left: 2px solid var(--pink-main);
       padding-left: 12px;
       margin-top: 14px;
       line-height: 1.45;
     }
 
-    /* =========================================================
-       LIGHTBOX MODAL
-       ========================================================= */
+    /* LIGHTBOX MODAL */
     .lightbox-modal {
       display: none;
       position: fixed;
       inset: 0;
       z-index: 200;
-      background: rgba(7, 10, 16, 0.95);
+      background: rgba(30, 41, 59, 0.92);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       align-items: center;
@@ -746,25 +743,24 @@
     }
     .lightbox-img {
       width: 100%;
-      max-height: 70vh;
+      max-height: 72vh;
       object-fit: contain;
       border-radius: 18px;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
-      background: #111827;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+      background: #FFFFFF;
     }
     .lightbox-caption {
-      margin-top: 12px;
+      margin-top: 14px;
       font-family: var(--font-hand);
-      font-size: 1.35rem;
-      color: #FDF2F8;
+      font-size: 1.4rem;
+      color: #FFFFFF;
     }
     .lightbox-close {
       position: absolute;
       top: -44px;
       right: 0;
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.4);
       color: #FFFFFF;
       width: 36px;
       height: 36px;
@@ -781,61 +777,26 @@
       text-align: center;
       margin-top: 48px;
       padding-top: 24px;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      border-top: 1px solid rgba(236, 72, 153, 0.15);
     }
 
     footer h3 {
       font-family: var(--font-title);
       font-size: 1.15rem;
       margin-bottom: 4px;
-      color: #F8FAFC;
+      color: var(--slate-dark);
     }
 
     footer p {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-    }
-
-    /* Responsive Mobile adjustments */
-    @media (max-width: 400px) {
-      .page-nav-wrapper {
-        padding: 0 4px;
-      }
-      .nav-btn {
-        padding: 6px 5px;
-        gap: 3px;
-      }
-      .nav-icon {
-        font-size: 0.8rem;
-      }
-      .nav-label {
-        font-size: 0.68rem;
-      }
-      .hero-card h1 {
-        font-size: 1.8rem;
-      }
-      .stats-grid {
-        gap: 6px;
-      }
-      .stat-card .val {
-        font-size: 0.8rem;
-      }
-    }
-
-    @media (min-width: 520px) {
-      .nav-btn {
-        padding: 8px 12px;
-      }
-      .nav-label {
-        font-size: 0.78rem;
-      }
+      font-size: 0.82rem;
+      color: var(--slate-muted);
     }
   </style>
 </head>
 <body>
 
-  <!-- Background Twinkling Canvas -->
-  <canvas id="stars-canvas"></canvas>
+  <!-- Ambient Particles Canvas -->
+  <canvas id="ambient-canvas"></canvas>
 
   <!-- Top Status Bar -->
   <header class="top-bar">
@@ -846,7 +807,7 @@
     <div class="status-tag">Pure Magic ✨</div>
   </header>
 
-  <!-- 5-PAGE SEGMENTED NAVIGATION -->
+  <!-- 6-PAGE SEGMENTED NAVIGATION -->
   <div class="page-nav-wrapper">
     <nav class="nav-segmented" aria-label="Page navigation">
       <a href="index.html" class="nav-btn" id="tabBtnDoctor" aria-label="Dr. Chandrima Tab">
@@ -864,6 +825,10 @@
       <a href="sanghati.html" class="nav-btn active" id="tabBtnSanghati" aria-label="Sanghati Tab">
         <span class="nav-icon">🌸</span>
         <span class="nav-label">Sanghati</span>
+      </a>
+      <a href="nishantika.html" class="nav-btn" id="tabBtnNishantika" aria-label="Nishantika Tab">
+        <span class="nav-icon">🌷</span>
+        <span class="nav-label">Nishantika</span>
       </a>
       <a href="musketers.html" class="nav-btn" id="tabBtnMusketeers" aria-label="Musketeers Tab">
         <span class="nav-icon">✨</span>
@@ -1110,12 +1075,12 @@
 
   <script>
     /* ============================================================
-       CANVAS TWINKLING STARS
+       CANVAS AMBIENT FLOATING PARTICLES
        ============================================================ */
-    const canvas = document.getElementById('stars-canvas');
+    const canvas = document.getElementById('ambient-canvas');
     const ctx = canvas.getContext('2d');
-    let stars = [];
-    const NUM_STARS = 75;
+    let particles = [];
+    const NUM_PARTICLES = 40;
 
     function resizeCanvas() {
       canvas.width = window.innerWidth;
@@ -1124,30 +1089,29 @@
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
 
-    class Star {
+    class Particle {
       constructor() {
         this.reset();
       }
       reset() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 1.8 + 0.5;
-        this.alpha = Math.random() * 0.7 + 0.2;
-        this.speed = Math.random() * 0.015 + 0.005;
-        this.color = Math.random() > 0.4 ? '#F472B6' : (Math.random() > 0.5 ? '#38BDF8' : '#FDE047');
+        this.size = Math.random() * 3 + 1;
+        this.speedY = Math.random() * 0.4 + 0.15;
+        this.alpha = Math.random() * 0.4 + 0.15;
+        this.color = Math.random() > 0.4 ? '#EC4899' : (Math.random() > 0.5 ? '#8B5CF6' : '#F472B6');
       }
       update() {
-        this.alpha += this.speed;
-        if (this.alpha > 0.9 || this.alpha < 0.2) {
-          this.speed = -this.speed;
+        this.y -= this.speedY;
+        if (this.y < -10) {
+          this.y = canvas.height + 10;
+          this.x = Math.random() * canvas.width;
         }
       }
       draw() {
         ctx.save();
-        ctx.globalAlpha = Math.max(0, Math.min(1, this.alpha));
+        ctx.globalAlpha = this.alpha;
         ctx.fillStyle = this.color;
-        ctx.shadowBlur = 8;
-        ctx.shadowColor = this.color;
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
         ctx.fill();
@@ -1155,19 +1119,19 @@
       }
     }
 
-    for (let i = 0; i < NUM_STARS; i++) {
-      stars.push(new Star());
+    for (let i = 0; i < NUM_PARTICLES; i++) {
+      particles.push(new Particle());
     }
 
-    function animateStars() {
+    function animateParticles() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      stars.forEach(star => {
-        star.update();
-        star.draw();
+      particles.forEach(p => {
+        p.update();
+        p.draw();
       });
-      requestAnimationFrame(animateStars);
+      requestAnimationFrame(animateParticles);
     }
-    animateStars();
+    animateParticles();
 
     /* ============================================================
        INTERACTIVE HOPE WISHES
@@ -1201,12 +1165,11 @@
         display.style.transform = 'scale(1)';
       }, 200);
 
-      // Star sparkle burst
       confetti({
         particleCount: 28,
         spread: 60,
         origin: { y: 0.75 },
-        colors: ['#F472B6', '#38BDF8', '#FDE047', '#C084FC']
+        colors: ['#EC4899', '#8B5CF6', '#F472B6', '#FCD34D']
       });
     }
 
@@ -1215,10 +1178,10 @@
        ============================================================ */
     function celebrateLove() {
       confetti({
-        particleCount: 60,
+        particleCount: 65,
         spread: 75,
         origin: { y: 0.5 },
-        colors: ['#F472B6', '#EC4899', '#8B5CF6', '#FDE047', '#38BDF8']
+        colors: ['#EC4899', '#F472B6', '#8B5CF6', '#FCD34D', '#FF6584']
       });
       const btn = document.getElementById('btnSendLove');
       btn.innerHTML = '<span>Love Sent To Chandu! 💖</span>';
