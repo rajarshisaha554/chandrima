@@ -1,813 +1,906 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>For Chandu ✨ | From Sanghati</title>
-  <meta name="description" content="Sanghati's heartfelt birthday wish and starlight keepsake for Chandu (Dr. Chandrima)." />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
-  
-  <!-- Canvas Confetti -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>For Chandu ✨ | From Sanghati</title>
+<meta name="description" content="Sanghati's heartfelt birthday wish, scrapbook keepsake, and comfort star jar for Chandu (Dr. Chandrima).">
 
-  <style>
-    :root {
-      --bg: #FFF7FA;
-      --bg-gradient: radial-gradient(circle at 50% 0%, #FFE8F2 0%, #FFF7FA 50%, #FAF5FF 100%);
-      --card-bg: rgba(255, 255, 255, 0.94);
-      --card-border: rgba(236, 72, 153, 0.18);
-      --pink-main: #EC4899;
-      --pink-dark: #BE185D;
-      --purple-accent: #8B5CF6;
-      --slate-dark: #1E293B;
-      --slate-muted: #64748B;
-      --font-body: 'Plus Jakarta Sans', sans-serif;
-      --font-title: 'Playfair Display', serif;
-      --font-hand: 'Caveat', cursive;
-    }
+<!-- Google Fonts (Fraunces + Plus Jakarta Sans + Caveat) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+<!-- Three.js 3D WebGL from CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<!-- Canvas Confetti -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-    body {
-      background-color: var(--bg);
-      background-image: var(--bg-gradient);
-      background-attachment: fixed;
-      color: var(--slate-dark);
-      font-family: var(--font-body);
-      line-height: 1.6;
-      padding-bottom: 70px;
-      overflow-x: hidden;
-      min-height: 100vh;
-      position: relative;
-    }
+<style>
+  :root {
+    --cream: #FFFDF9;
+    --cream-deep: #FDF2F8;
+    --cream-card: rgba(255, 255, 255, 0.90);
+    --cream-card-border: rgba(244, 114, 182, 0.32);
+    --card-bg: rgba(255, 255, 255, 0.94);
+    --border-color: rgba(244, 114, 182, 0.28);
+    --plum: #24304A;
+    --plum-dark: #1E293B;
+    --plum-deep: #831843;
+    --plum-soft: #64748B;
+    --rose: #FF6584;
+    --rose-deep: #DB2777;
+    --rose-soft: #FCE7F3;
+    --pink-main: #EC4899;
+    --pink-light: #FFF0F5;
+    --purple-soft: #F3E8FF;
+    --purple-accent: #A855F7;
+    --shadow-soft: 0 10px 25px rgba(219, 39, 119, 0.08);
+    --shadow-deep: 0 20px 45px rgba(219, 39, 119, 0.12);
+    --font-heading: 'Fraunces', serif;
+    --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-hand: 'Caveat', cursive;
+  }
 
-    /* Ambient Floating Floating Particles Canvas */
-    #ambient-canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 0;
-      opacity: 0.65;
-    }
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+  }
 
-    /* Top Status Bar */
-    .top-bar {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      background: rgba(255, 255, 255, 0.88);
-      border-bottom: 1px solid rgba(236, 72, 153, 0.15);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 16px;
-      font-size: 0.82rem;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-    }
+  html {
+    scroll-behavior: smooth;
+    background-color: var(--cream);
+  }
 
-    .pulse-badge {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      color: var(--pink-dark);
-    }
+  body {
+    background:
+      radial-gradient(circle at 15% 10%, rgba(255, 217, 234, 0.55), transparent 45%),
+      radial-gradient(circle at 85% 30%, rgba(252, 231, 243, 0.65), transparent 50%),
+      radial-gradient(circle at 50% 85%, rgba(254, 243, 199, 0.45), transparent 55%),
+      var(--cream);
+    color: var(--plum);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+    padding-bottom: env(safe-area-inset-bottom, 24px);
+  }
 
-    .pulse-dot {
-      width: 8px;
-      height: 8px;
-      background: var(--pink-main);
-      border-radius: 50%;
-      box-shadow: 0 0 10px var(--pink-main);
-      animation: pulseGlow 1.8s infinite;
-    }
+  /* 3D WebGL Canvas Layer */
+  #webgl-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 1;
+  }
 
-    @keyframes pulseGlow {
-      0% { transform: scale(0.9); opacity: 0.7; }
-      50% { transform: scale(1.3); opacity: 1; }
-      100% { transform: scale(0.9); opacity: 0.7; }
-    }
+  /* Top Status Bar (ECG / Bond Header) */
+  .ecg-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255, 253, 249, 0.90);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--cream-card-border);
+    padding: 9px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 15px rgba(219, 39, 119, 0.04);
+  }
 
-    .status-tag {
-      color: var(--pink-dark);
-      background: rgba(236, 72, 153, 0.1);
-      padding: 4px 10px;
-      border-radius: 9999px;
-      border: 1px solid rgba(236, 72, 153, 0.22);
-      font-size: 0.75rem;
-      font-weight: 700;
-    }
+  .ecg-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--rose-deep);
+  }
 
-    /* =========================================================
-       HORIZONTALLY SCROLLABLE 6-PAGE NAVBAR
-       ========================================================= */
-    .page-nav-wrapper {
-      margin: 8px auto 16px;
-      width: 100%;
-      max-width: 580px;
-      position: sticky;
-      top: 48px;
-      z-index: 95;
-      padding: 0 10px;
-      box-sizing: border-box;
-    }
+  .pulse-dot {
+    width: 9px;
+    height: 9px;
+    background: var(--pink-main);
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(236, 72, 153, 0.6);
+    animation: pulseRing 1.3s infinite ease-out;
+  }
+
+  @keyframes pulseRing {
+    0% { transform: scale(0.9); opacity: 1; }
+    50% { transform: scale(1.4); opacity: 0.7; }
+    100% { transform: scale(0.9); opacity: 1; }
+  }
+
+  .bpm-tag {
+    font-size: 0.75rem;
+    background: var(--rose-soft);
+    color: var(--rose-deep);
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 700;
+    border: 1px solid rgba(219, 39, 119, 0.2);
+  }
+
+  /* Content Wrapper (Standard phone layout frame) */
+  .app-container {
+    position: relative;
+    z-index: 10;
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 14px 18px 80px;
+  }
+
+  /* =========================================================
+     TAB NAVIGATION BAR (Horizontally Scrollable Mobile Pill Track)
+     ========================================================= */
+  .page-nav-wrapper {
+    margin: 8px auto 16px;
+    width: 100%;
+    max-width: 580px;
+    position: sticky;
+    top: 48px;
+    z-index: 95;
+    padding: 0 10px;
+    box-sizing: border-box;
+  }
+  .nav-segmented {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--cream-card-border);
+    border-radius: 999px;
+    padding: 4px 6px;
+    box-shadow: 0 4px 18px rgba(219, 39, 119, 0.08);
+    gap: 6px;
+    width: 100%;
+    box-sizing: border-box;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+  .nav-segmented::-webkit-scrollbar {
+    display: none;
+  }
+  .nav-btn {
+    flex: 0 0 auto;
+    border: none;
+    background: transparent;
+    border-radius: 999px;
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 0.82rem;
+    color: var(--plum-soft);
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    white-space: nowrap;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 8px 16px;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .nav-btn:hover {
+    color: var(--plum);
+  }
+  .nav-btn:active {
+    transform: scale(0.96);
+  }
+  .nav-icon {
+    font-size: 0.95rem;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .nav-label {
+    font-size: 0.82rem;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+
+  .nav-btn.active {
+    background: linear-gradient(135deg, #FF6584, #E11D48);
+    color: #FFFFFF !important;
+    box-shadow: 0 4px 14px rgba(225, 29, 72, 0.38);
+  }
+  .nav-btn.active.sankha-active {
+    background: linear-gradient(135deg, #F59E0B, #EA580C);
+    box-shadow: 0 4px 14px rgba(234, 88, 12, 0.38);
+    color: #FFFFFF !important;
+  }
+  .nav-btn.active.debjit-active {
+    background: linear-gradient(135deg, #7E22CE, #9333EA);
+    box-shadow: 0 4px 14px rgba(126, 34, 206, 0.38);
+    color: #FFFFFF !important;
+  }
+  .nav-btn.active.sanghati-active {
+    background: linear-gradient(135deg, #EC4899, #8B5CF6);
+    box-shadow: 0 4px 14px rgba(236, 72, 153, 0.38);
+    color: #FFFFFF !important;
+  }
+  .nav-btn.active.nishantika-active {
+    background: linear-gradient(135deg, #FF6B81, #FF8E53);
+    box-shadow: 0 4px 14px rgba(255, 107, 129, 0.38);
+    color: #FFFFFF !important;
+  }
+  .nav-btn.active.musketers-active {
+    background: linear-gradient(135deg, #0D9488, #059669);
+    box-shadow: 0 4px 14px rgba(13, 148, 136, 0.38);
+    color: #FFFFFF !important;
+  }
+
+  @media (min-width: 600px) {
     .nav-segmented {
-      display: flex;
-      align-items: center;
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(236, 72, 153, 0.18);
-      border-radius: 999px;
-      padding: 4px 6px;
-      box-shadow: 0 4px 18px rgba(236, 72, 153, 0.08);
-      gap: 6px;
-      width: 100%;
-      box-sizing: border-box;
-      overflow-x: auto;
-      overflow-y: hidden;
-      scrollbar-width: none;
-      -webkit-overflow-scrolling: touch;
-      scroll-behavior: smooth;
-    }
-    .nav-segmented::-webkit-scrollbar {
-      display: none;
+      justify-content: center;
+      padding: 5px 8px;
     }
     .nav-btn {
-      flex: 0 0 auto;
-      border: none;
-      background: transparent;
-      border-radius: 999px;
-      font-family: var(--font-body);
-      font-weight: 700;
-      font-size: 0.82rem;
-      color: #64748B;
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      white-space: nowrap;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-      padding: 8px 16px;
-      -webkit-tap-highlight-color: transparent;
+      padding: 9px 18px;
     }
-    .nav-btn:hover {
-      color: var(--slate-dark);
-    }
-    .nav-btn:active {
-      transform: scale(0.96);
-    }
-    .nav-icon {
-      font-size: 0.95rem;
-      line-height: 1;
-      flex-shrink: 0;
-    }
-    .nav-label {
-      font-size: 0.82rem;
-      line-height: 1.2;
-      white-space: nowrap;
-    }
+  }
 
-    .nav-btn.active {
-      background: linear-gradient(135deg, #EC4899, #8B5CF6);
-      color: #FFFFFF !important;
-      box-shadow: 0 4px 14px rgba(236, 72, 153, 0.38);
-    }
+  /* =========================================================
+     HERO SECTION (Matching Signature Hero Card Style)
+     ========================================================= */
+  .hero-card {
+    background: var(--cream-card);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.92);
+    border-radius: 32px;
+    padding: 32px 20px 26px;
+    box-shadow: var(--shadow-deep);
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    margin-bottom: 24px;
+  }
 
-    @media (min-width: 650px) {
-      .nav-segmented {
-        justify-content: center;
-        padding: 5px 8px;
-      }
-      .nav-btn {
-        padding: 9px 18px;
-      }
-    }
+  .hero-card::before {
+    content: '';
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 240px;
+    height: 90px;
+    background: radial-gradient(circle, rgba(244, 114, 182, 0.28) 0%, transparent 70%);
+    filter: blur(25px);
+    pointer-events: none;
+  }
 
-    /* Main Container */
-    .container {
-      max-width: 580px;
-      margin: 0 auto;
-      padding: 0 16px;
-      position: relative;
-      z-index: 1;
-    }
+  .avatar-wrap {
+    position: relative;
+    width: 135px;
+    height: 135px;
+    margin: 0 auto 16px;
+  }
 
-    /* Hero Section */
-    .hero-card {
-      background: rgba(255, 255, 255, 0.92);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid var(--card-border);
-      border-radius: 28px;
-      padding: 34px 20px 28px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 16px 36px rgba(236, 72, 153, 0.08);
-      margin-bottom: 24px;
-    }
+  .avatar-ring {
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 2px dashed #EC4899;
+    animation: rotateSlow 20s linear infinite;
+  }
+  @keyframes rotateSlow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
 
-    .hero-card::before {
-      content: '';
-      position: absolute;
-      top: -30px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 220px;
-      height: 90px;
-      background: radial-gradient(circle, rgba(236, 72, 153, 0.22) 0%, transparent 70%);
-      filter: blur(25px);
-      pointer-events: none;
-    }
+  .hero-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center top;
+    border: 4px solid #FFFFFF;
+    box-shadow: 0 10px 28px rgba(236, 72, 153, 0.25);
+    background: #FFF5F7;
+    display: block;
+  }
 
-    .avatar-wrapper {
-      width: 140px;
-      height: 140px;
-      margin: 0 auto 18px;
-      position: relative;
-    }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.74rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 800;
+    color: var(--rose-deep);
+    background: var(--rose-soft);
+    border: 1px solid rgba(219, 39, 119, 0.22);
+    padding: 5px 14px;
+    border-radius: 9999px;
+    margin-bottom: 12px;
+  }
 
-    .avatar-ring {
-      position: absolute;
-      inset: -5px;
-      border-radius: 50%;
-      background: conic-gradient(from 0deg, #EC4899, #8B5CF6, #F472B6, #EC4899);
-      animation: rotateRing 6s linear infinite;
-      filter: blur(1.5px);
-    }
+  .hero-title {
+    font-family: var(--font-heading);
+    font-size: 1.95rem;
+    font-weight: 700;
+    color: var(--plum);
+    line-height: 1.25;
+    margin-bottom: 6px;
+  }
 
-    @keyframes rotateRing {
-      to { transform: rotate(360deg); }
-    }
+  .hero-subtitle {
+    font-family: var(--font-hand);
+    font-size: 1.55rem;
+    font-weight: 700;
+    color: var(--rose-deep);
+    margin-bottom: 14px;
+  }
 
-    .avatar {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      object-fit: cover;
-      object-position: top center;
-      border: 3px solid #FFFFFF;
-      box-shadow: 0 8px 24px rgba(236, 72, 153, 0.28);
-      background: #FFF5F7;
-    }
+  /* Warm Heartfelt Message Card */
+  .hero-msg-box {
+    background: #FFFFFF;
+    border: 1px solid rgba(244, 114, 182, 0.32);
+    border-radius: 18px;
+    padding: 16px 18px;
+    margin: 12px 0 18px;
+    text-align: left;
+    box-shadow: 0 6px 18px rgba(236, 72, 153, 0.06);
+  }
 
-    .nickname-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      font-weight: 800;
-      color: var(--pink-dark);
-      background: rgba(236, 72, 153, 0.1);
-      border: 1px solid rgba(236, 72, 153, 0.25);
-      padding: 5px 14px;
-      border-radius: 9999px;
-      margin-bottom: 12px;
-    }
+  .hero-msg-box p {
+    font-size: 0.93rem;
+    line-height: 1.65;
+    color: var(--plum);
+  }
 
-    .hero-card h1 {
-      font-family: var(--font-title);
-      font-size: 2.2rem;
-      font-weight: 700;
-      margin-bottom: 6px;
-      line-height: 1.25;
-      background: linear-gradient(135deg, #BE185D, #EC4899, #8B5CF6);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
+  .hero-msg-punch {
+    font-family: var(--font-hand);
+    font-size: 1.45rem;
+    color: var(--rose-deep);
+    font-weight: 700;
+    margin-top: 8px;
+    line-height: 1.35;
+  }
 
-    .hero-subtitle {
-      font-family: var(--font-hand);
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: var(--pink-dark);
-      margin-bottom: 12px;
-    }
+  /* Stats Grid */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+  }
 
-    .hero-bio {
-      color: var(--slate-muted);
-      font-size: 0.98rem;
-      max-width: 480px;
-      margin: 0 auto 20px;
-      line-height: 1.65;
-    }
+  .stat-card {
+    background: #FFFFFF;
+    border: 1px solid rgba(244, 114, 182, 0.22);
+    border-radius: 16px;
+    padding: 12px 6px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    transition: all 0.2s ease;
+  }
+  .stat-card:hover {
+    border-color: rgba(236, 72, 153, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(236, 72, 153, 0.12);
+  }
 
-    .hero-bio strong {
-      color: var(--slate-dark);
-      font-weight: 700;
-    }
+  .stat-card .val {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 0.88rem;
+    color: var(--rose-deep);
+    line-height: 1.2;
+  }
 
-    /* Stats Grid */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-bottom: 22px;
-    }
+  .stat-card .desc {
+    font-size: 0.72rem;
+    color: var(--plum-soft);
+    margin-top: 3px;
+  }
 
-    .stat-card {
-      background: #FFFFFF;
-      border: 1px solid rgba(236, 72, 153, 0.14);
-      border-radius: 16px;
-      padding: 12px 6px;
-      text-align: center;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
-      transition: all 0.2s ease;
-    }
-    .stat-card:hover {
-      border-color: rgba(236, 72, 153, 0.35);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 18px rgba(236, 72, 153, 0.12);
-    }
+  /* Send Love Pill Button */
+  .btn-send-love {
+    display: block;
+    width: 100%;
+    padding: 14px 22px;
+    border: none;
+    border-radius: 999px;
+    font-family: var(--font-body);
+    font-size: 0.98rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #EC4899 0%, #DB2777 100%);
+    color: #FFFFFF;
+    box-shadow: 0 8px 22px rgba(219, 39, 119, 0.32);
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .btn-send-love:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 26px rgba(219, 39, 119, 0.42);
+  }
+  .btn-send-love:active {
+    transform: scale(0.97);
+  }
 
-    .stat-card .val {
-      font-weight: 800;
-      font-size: 0.88rem;
-      color: var(--pink-dark);
-      line-height: 1.2;
-    }
+  /* Section Header */
+  .section-header {
+    text-align: center;
+    margin-top: 34px;
+    margin-bottom: 16px;
+  }
+  .sub-tag {
+    font-size: 0.76rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: var(--rose-deep);
+    margin-bottom: 4px;
+    display: block;
+  }
+  .section-h2 {
+    font-family: var(--font-heading);
+    font-size: 1.55rem;
+    font-weight: 700;
+    color: var(--plum);
+  }
+  .section-hand-tag {
+    font-family: var(--font-hand);
+    font-size: 1.3rem;
+    color: var(--rose-deep);
+    margin-top: 3px;
+  }
 
-    .stat-card .desc {
-      font-size: 0.72rem;
-      color: var(--slate-muted);
-      margin-top: 3px;
-    }
+  /* =========================================================
+     PHOTO SCRAPBOOK KEEPSAKE (9 PHOTOS)
+     Warm polaroid scrapbook aesthetic matching the rest of the site
+     ========================================================= */
+  .scrapbook-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 13px;
+    margin-top: 14px;
+  }
 
-    /* Send Love Button */
-    .btn-send-love {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      width: 100%;
-      max-width: 320px;
-      padding: 13px 24px;
-      border: none;
-      border-radius: 999px;
-      background: linear-gradient(135deg, #EC4899, #8B5CF6);
-      color: #FFFFFF;
-      font-family: var(--font-body);
-      font-size: 0.95rem;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 6px 20px rgba(236, 72, 153, 0.35);
-      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-    .btn-send-love:hover {
-      transform: translateY(-2px) scale(1.02);
-      box-shadow: 0 10px 26px rgba(236, 72, 153, 0.48);
-    }
-    .btn-send-love:active {
-      transform: scale(0.97);
-    }
+  .photo-card {
+    background: #FFFFFF;
+    border: 1px solid rgba(244, 114, 182, 0.3);
+    border-radius: 18px;
+    padding: 8px 8px 12px;
+    box-shadow: 0 6px 20px rgba(36, 48, 74, 0.06);
+    cursor: pointer;
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .photo-card:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 12px 28px rgba(219, 39, 119, 0.16);
+    border-color: rgba(236, 72, 153, 0.45);
+  }
+  .photo-card:nth-child(even) {
+    transform: rotate(0.8deg);
+  }
+  .photo-card:nth-child(odd) {
+    transform: rotate(-0.8deg);
+  }
 
-    /* Section Title */
-    .section-title {
-      margin: 32px 0 18px;
-      text-align: center;
-    }
+  .photo-pin {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 26px;
+    height: 26px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(244, 114, 182, 0.35);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    z-index: 2;
+  }
 
-    .section-title span {
-      font-size: 0.75rem;
-      font-weight: 800;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--pink-dark);
-      display: block;
-      margin-bottom: 4px;
-    }
+  .photo-card.span-2 {
+    grid-column: span 2;
+    transform: rotate(0deg) !important;
+  }
 
-    .section-title h2 {
-      font-family: var(--font-title);
-      font-size: 1.65rem;
-      font-weight: 700;
-      color: var(--slate-dark);
-    }
+  .photo-card-img {
+    width: 100%;
+    aspect-ratio: 1 / 1.15;
+    object-fit: cover;
+    border-radius: 12px;
+    display: block;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05);
+    transition: transform 0.35s ease;
+  }
+  .photo-card.span-2 .photo-card-img {
+    aspect-ratio: 16 / 10;
+  }
+  .photo-card:hover .photo-card-img {
+    transform: scale(1.03);
+  }
 
-    /* =========================================================
-       PHOTO SCRAPBOOK KEEPSAKE (9 PHOTOS)
-       ========================================================= */
-    .scrapbook-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 14px;
-      margin-bottom: 28px;
-    }
+  .photo-card-cap {
+    font-family: var(--font-heading);
+    font-size: 0.86rem;
+    color: var(--plum);
+    margin-top: 8px;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+  .photo-card-sub {
+    font-family: var(--font-hand);
+    font-size: 1.1rem;
+    color: var(--rose-deep);
+    margin-top: 2px;
+    line-height: 1.2;
+  }
 
-    .photo-item {
-      position: relative;
-      border-radius: 18px;
-      overflow: hidden;
-      background: #FFFFFF;
-      border: 1px solid rgba(236, 72, 153, 0.16);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
-      cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
+  /* =========================================================
+     INTERACTIVE COMFORT STAR JAR (Matching Voucher / Oath Style)
+     ========================================================= */
+  .comfort-jar-box {
+    background: linear-gradient(145deg, #FFFFFF 0%, #FFF5F8 100%);
+    border: 2px dashed rgba(244, 114, 182, 0.5);
+    border-radius: 24px;
+    padding: 24px 18px;
+    text-align: center;
+    margin: 28px 0;
+    position: relative;
+    box-shadow: 0 10px 28px rgba(219, 39, 119, 0.08);
+  }
 
-    .photo-item:hover {
-      transform: translateY(-4px) scale(1.02);
-      border-color: rgba(236, 72, 153, 0.45);
-      box-shadow: 0 14px 32px rgba(236, 72, 153, 0.18);
-    }
+  .comfort-jar-stamp {
+    display: inline-block;
+    border: 1.5px solid var(--rose-deep);
+    color: var(--rose-deep);
+    background: #FFF0F5;
+    padding: 3px 12px;
+    border-radius: 6px;
+    font-size: 0.74rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    transform: rotate(-2deg);
+    margin-bottom: 10px;
+  }
 
-    .photo-item img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      aspect-ratio: 1 / 1.18;
-      transition: transform 0.4s ease;
-    }
+  .comfort-jar-icon {
+    font-size: 2.5rem;
+    margin-bottom: 6px;
+    display: inline-block;
+    animation: gentleFloat 3s ease-in-out infinite;
+  }
+  @keyframes gentleFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+  }
 
-    .photo-item:hover img {
-      transform: scale(1.04);
-    }
+  .comfort-jar-box h3 {
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    color: var(--plum);
+    margin-bottom: 6px;
+  }
 
-    .photo-item.span-2 {
-      grid-column: span 2;
-    }
-    .photo-item.span-2 img {
-      aspect-ratio: 16 / 10;
-    }
+  .comfort-jar-box p {
+    font-size: 0.88rem;
+    color: var(--plum-soft);
+    margin-bottom: 16px;
+    line-height: 1.55;
+  }
 
-    .photo-tag-overlay {
-      position: absolute;
-      bottom: 8px;
-      left: 8px;
-      right: 8px;
-      background: rgba(255, 255, 255, 0.88);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border: 1px solid rgba(236, 72, 153, 0.15);
-      border-radius: 999px;
-      padding: 5px 10px;
-      font-size: 0.74rem;
-      font-weight: 700;
-      color: var(--slate-dark);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      pointer-events: none;
-    }
+  .hope-display-card {
+    background: #FFFFFF;
+    border: 1px solid rgba(244, 114, 182, 0.35);
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 16px;
+    min-height: 85px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-family: var(--font-hand);
+    font-size: 1.4rem;
+    color: var(--rose-deep);
+    line-height: 1.4;
+    box-shadow: 0 4px 14px rgba(219, 39, 119, 0.06);
+    transition: all 0.3s ease;
+  }
 
-    .photo-pin {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      width: 24px;
-      height: 24px;
-      background: rgba(255, 255, 255, 0.95);
-      border: 1px solid rgba(236, 72, 153, 0.2);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.75rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      z-index: 2;
-    }
+  .btn-draw-hope {
+    background: #FFF0F5;
+    border: 1px solid rgba(219, 39, 119, 0.35);
+    color: var(--rose-deep);
+    padding: 10px 22px;
+    border-radius: 999px;
+    font-family: var(--font-body);
+    font-size: 0.86rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(219, 39, 119, 0.08);
+  }
+  .btn-draw-hope:hover {
+    background: rgba(236, 72, 153, 0.16);
+    transform: translateY(-1px);
+  }
+  .btn-draw-hope:active {
+    transform: scale(0.96);
+  }
 
-    /* =========================================================
-       INTERACTIVE COMFORT JAR / DAILY DOSE OF HOPE WIDGET
-       ========================================================= */
-    .comfort-jar-box {
-      background: #FFFFFF;
-      border: 1px dashed rgba(236, 72, 153, 0.35);
-      border-radius: 24px;
-      padding: 24px 18px;
-      text-align: center;
-      margin: 28px 0;
-      position: relative;
-      box-shadow: 0 10px 28px rgba(236, 72, 153, 0.06);
-    }
+  /* =========================================================
+     TIMELINE CARDS: THINGS YOU MUST REMEMBER
+     ========================================================= */
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 14px;
+    margin-bottom: 28px;
+  }
 
-    .comfort-jar-icon {
-      font-size: 2.4rem;
-      margin-bottom: 8px;
-      display: inline-block;
-      animation: gentleFloat 3s ease-in-out infinite;
-    }
+  .timeline-card {
+    background: #FFFFFF;
+    border: 1px solid rgba(244, 114, 182, 0.25);
+    border-radius: 20px;
+    padding: 18px;
+    box-shadow: 0 6px 18px rgba(36, 48, 74, 0.05);
+    transition: transform 0.25s ease, border-color 0.25s ease;
+  }
+  .timeline-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(236, 72, 153, 0.4);
+    box-shadow: 0 10px 24px rgba(219, 39, 119, 0.1);
+  }
 
-    @keyframes gentleFloat {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-6px); }
-    }
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
 
-    .comfort-jar-box h3 {
-      font-family: var(--font-title);
-      font-size: 1.3rem;
-      color: var(--slate-dark);
-      margin-bottom: 6px;
-    }
+  .symbol-tag {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    background: var(--rose-soft);
+    border: 1px solid rgba(219, 39, 119, 0.25);
+    color: var(--rose-deep);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.15rem;
+    flex-shrink: 0;
+  }
 
-    .comfort-jar-box p {
-      font-size: 0.88rem;
-      color: var(--slate-muted);
-      margin-bottom: 16px;
-    }
+  .card-title-group h3 {
+    font-family: var(--font-heading);
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--plum);
+  }
 
-    .hope-display-card {
-      background: #FFF7FA;
-      border: 1px solid rgba(236, 72, 153, 0.2);
-      border-radius: 16px;
-      padding: 16px;
-      margin-bottom: 16px;
-      min-height: 80px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      font-family: var(--font-hand);
-      font-size: 1.35rem;
-      color: var(--pink-dark);
-      line-height: 1.45;
-      transition: all 0.3s ease;
-    }
+  .card-title-group span {
+    font-size: 0.72rem;
+    color: var(--rose-deep);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 700;
+  }
 
-    .btn-draw-hope {
-      background: rgba(236, 72, 153, 0.08);
-      border: 1px solid rgba(236, 72, 153, 0.35);
-      color: var(--pink-dark);
-      padding: 10px 22px;
-      border-radius: 999px;
-      font-family: var(--font-body);
-      font-size: 0.85rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.2s ease;
-    }
-    .btn-draw-hope:hover {
-      background: rgba(236, 72, 153, 0.16);
-    }
-    .btn-draw-hope:active {
-      transform: scale(0.96);
-    }
+  .card-text {
+    color: var(--plum-soft);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
 
-    /* =========================================================
-       TIMELINE CARDS: THINGS YOU MUST REMEMBER
-       ========================================================= */
-    .timeline {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      margin-bottom: 28px;
-    }
+  .tag-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
 
-    .timeline-card {
-      background: #FFFFFF;
-      border: 1px solid rgba(236, 72, 153, 0.14);
-      border-radius: 20px;
-      padding: 18px;
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.03);
-      transition: transform 0.25s ease, border-color 0.25s ease;
-    }
+  .tag {
+    font-size: 0.72rem;
+    font-weight: 600;
+    background: #FFF5F7;
+    border: 1px solid rgba(244, 114, 182, 0.25);
+    padding: 3px 10px;
+    border-radius: 9999px;
+    color: var(--rose-deep);
+  }
 
-    .timeline-card:hover {
-      transform: translateY(-2px);
-      border-color: rgba(236, 72, 153, 0.35);
-      box-shadow: 0 10px 24px rgba(236, 72, 153, 0.1);
-    }
+  /* =========================================================
+     NOTE CARD: A PROMISE & A REMINDER
+     ========================================================= */
+  .note-card {
+    background: linear-gradient(145deg, #FFFFFF 0%, #FFF5F8 100%);
+    border: 1px dashed rgba(244, 114, 182, 0.45);
+    border-radius: 24px;
+    padding: 24px 20px;
+    margin-top: 30px;
+    position: relative;
+    box-shadow: 0 10px 28px rgba(219, 39, 119, 0.08);
+  }
 
-    .card-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 10px;
-    }
+  .rx-symbol {
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    font-size: 2rem;
+    opacity: 0.35;
+  }
 
-    .symbol-tag {
-      width: 38px;
-      height: 38px;
-      border-radius: 12px;
-      background: rgba(236, 72, 153, 0.1);
-      border: 1px solid rgba(236, 72, 153, 0.2);
-      color: var(--pink-main);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      font-size: 1.15rem;
-      flex-shrink: 0;
-    }
+  .note-header {
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    font-weight: 800;
+    color: var(--rose-deep);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
 
-    .card-title-group h3 {
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--slate-dark);
-    }
+  .meta-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.82rem;
+    color: var(--plum-soft);
+    border-bottom: 1px solid rgba(244, 114, 182, 0.2);
+    padding-bottom: 10px;
+    margin-bottom: 14px;
+  }
 
-    .card-title-group span {
-      font-size: 0.72rem;
-      color: var(--pink-dark);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      font-weight: 700;
-    }
+  .meta-row strong {
+    color: var(--plum);
+  }
 
-    .card-text {
-      color: var(--slate-muted);
-      font-size: 0.9rem;
-      line-height: 1.6;
-      margin-bottom: 12px;
-    }
+  .reminders-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    font-size: 0.9rem;
+    color: var(--plum);
+    margin-bottom: 16px;
+    line-height: 1.55;
+  }
 
-    .tag-container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
+  .reminders-list li strong {
+    color: var(--rose-deep);
+  }
 
-    .tag {
-      font-size: 0.72rem;
-      font-weight: 600;
-      background: #FFF5F7;
-      border: 1px solid rgba(236, 72, 153, 0.15);
-      padding: 3px 10px;
-      border-radius: 9999px;
-      color: var(--pink-dark);
-    }
+  .quote-box {
+    font-family: var(--font-hand);
+    font-size: 1.35rem;
+    color: var(--rose-deep);
+    border-left: 3px solid var(--rose-deep);
+    padding-left: 12px;
+    margin-top: 14px;
+    line-height: 1.45;
+  }
 
-    /* =========================================================
-       NOTE CARD: A PROMISE & A REMINDER
-       ========================================================= */
-    .note-card {
-      background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(255, 240, 245, 0.8));
-      border: 1px dashed rgba(236, 72, 153, 0.4);
-      border-radius: 24px;
-      padding: 24px 20px;
-      margin-top: 32px;
-      position: relative;
-      box-shadow: 0 10px 28px rgba(236, 72, 153, 0.08);
-    }
+  /* Footer */
+  .footer-love {
+    text-align: center;
+    border-top: 1px solid rgba(244, 114, 182, 0.28);
+    margin-top: 40px;
+    padding-top: 24px;
+  }
 
-    .rx-symbol {
-      position: absolute;
-      top: 14px;
-      right: 18px;
-      font-size: 2rem;
-      opacity: 0.4;
-    }
+  .footer-love h3 {
+    font-family: var(--font-heading);
+    font-size: 1.35rem;
+    color: var(--plum);
+    margin-bottom: 4px;
+  }
 
-    .note-header {
-      font-size: 0.75rem;
-      letter-spacing: 0.12em;
-      font-weight: 800;
-      color: var(--pink-dark);
-      margin-bottom: 12px;
-      text-transform: uppercase;
-    }
+  .footer-love p {
+    font-family: var(--font-hand);
+    font-size: 1.55rem;
+    color: var(--rose-deep);
+  }
 
-    .meta-row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.82rem;
-      color: var(--slate-muted);
-      border-bottom: 1px solid rgba(236, 72, 153, 0.15);
-      padding-bottom: 10px;
-      margin-bottom: 14px;
-    }
+  .footer-love .footer-stamp {
+    font-size: 0.78rem;
+    color: var(--plum-soft);
+    margin-top: 10px;
+  }
 
-    .meta-row strong {
-      color: var(--slate-dark);
-    }
-
-    .reminders-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      font-size: 0.9rem;
-      color: var(--slate-dark);
-      margin-bottom: 16px;
-    }
-
-    .reminders-list li strong {
-      color: var(--pink-dark);
-    }
-
-    .quote-box {
-      font-family: var(--font-hand);
-      font-size: 1.3rem;
-      color: var(--pink-dark);
-      border-left: 2px solid var(--pink-main);
-      padding-left: 12px;
-      margin-top: 14px;
-      line-height: 1.45;
-    }
-
-    /* LIGHTBOX MODAL */
-    .lightbox-modal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      z-index: 200;
-      background: rgba(30, 41, 59, 0.92);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-      opacity: 0;
-      transition: opacity 0.25s ease;
-    }
-    .lightbox-modal.active {
-      display: flex;
-      opacity: 1;
-    }
-    .lightbox-content {
-      max-width: 480px;
-      width: 100%;
-      text-align: center;
-      position: relative;
-    }
-    .lightbox-img {
-      width: 100%;
-      max-height: 72vh;
-      object-fit: contain;
-      border-radius: 18px;
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
-      background: #FFFFFF;
-    }
-    .lightbox-caption {
-      margin-top: 14px;
-      font-family: var(--font-hand);
-      font-size: 1.4rem;
-      color: #FFFFFF;
-    }
-    .lightbox-close {
-      position: absolute;
-      top: -44px;
-      right: 0;
-      background: rgba(255, 255, 255, 0.2);
-      border: 1px solid rgba(255, 255, 255, 0.4);
-      color: #FFFFFF;
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      font-size: 1.1rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    /* Footer */
-    footer {
-      text-align: center;
-      margin-top: 48px;
-      padding-top: 24px;
-      border-top: 1px solid rgba(236, 72, 153, 0.15);
-    }
-
-    footer h3 {
-      font-family: var(--font-title);
-      font-size: 1.15rem;
-      margin-bottom: 4px;
-      color: var(--slate-dark);
-    }
-
-    footer p {
-      font-size: 0.82rem;
-      color: var(--slate-muted);
-    }
-  </style>
+  /* Lightbox Modal */
+  .lightbox-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background: rgba(30, 41, 59, 0.88);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+  .lightbox-modal.active {
+    display: flex;
+    opacity: 1;
+  }
+  .lightbox-content {
+    max-width: 440px;
+    width: 100%;
+    text-align: center;
+    position: relative;
+  }
+  .lightbox-img {
+    width: 100%;
+    max-height: 72vh;
+    object-fit: contain;
+    border-radius: 18px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+    background: #FFFFFF;
+    border: 4px solid #FFFFFF;
+  }
+  .lightbox-caption {
+    margin-top: 14px;
+    font-family: var(--font-hand);
+    font-size: 1.45rem;
+    color: #FFFFFF;
+  }
+  .lightbox-close {
+    position: absolute;
+    top: -46px;
+    right: 0;
+    background: rgba(255, 255, 255, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    color: #FFFFFF;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+</style>
 </head>
 <body>
 
-  <!-- Ambient Particles Canvas -->
-  <canvas id="ambient-canvas"></canvas>
+  <!-- Three.js 3D Floating WebGL Ambient Canvas -->
+  <div id="webgl-container"></div>
 
-  <!-- Top Status Bar -->
-  <header class="top-bar">
-    <div class="pulse-badge">
+  <!-- Mobile Top Status Bar -->
+  <header class="ecg-topbar">
+    <div class="ecg-left">
       <div class="pulse-dot"></div>
-      <span>SANGHATI & CHANDU 🌸</span>
+      <span>CHANDU & SANGHATI // SOUL SISTERS 🌸</span>
     </div>
-    <div class="status-tag">Pure Magic ✨</div>
+    <div class="bpm-tag">PURE MAGIC ✨</div>
   </header>
 
-  <!-- 6-PAGE SEGMENTED NAVIGATION -->
+  <!-- TOP PAGE NAVIGATION (HORIZONTALLY SCROLLABLE 6-TAB PILL TRACK) -->
   <div class="page-nav-wrapper">
     <nav class="nav-segmented" aria-label="Page navigation">
       <a href="index.html" class="nav-btn" id="tabBtnDoctor" aria-label="Dr. Chandrima Tab">
@@ -822,7 +915,7 @@
         <span class="nav-icon">👻</span>
         <span class="nav-label">Debjit</span>
       </a>
-      <a href="sanghati.html" class="nav-btn active" id="tabBtnSanghati" aria-label="Sanghati Tab">
+      <a href="sanghati.html" class="nav-btn active sanghati-active" id="tabBtnSanghati" aria-label="Sanghati Tab">
         <span class="nav-icon">🌸</span>
         <span class="nav-label">Sanghati</span>
       </a>
@@ -837,23 +930,25 @@
     </nav>
   </div>
 
-  <main class="container">
-    <!-- HERO SECTION -->
+  <main class="app-container">
+
+    <!-- HERO SECTION (MATCHING SITE HERO CARD STYLE) -->
     <section class="hero-card">
-      <div class="avatar-wrapper">
+      <div class="avatar-wrap">
         <div class="avatar-ring"></div>
-        <img class="avatar" src="sanghati2.png" alt="Chandu" onerror="this.src='image1.png'" />
+        <img class="hero-avatar" src="sanghati2.png" alt="Chandu" onerror="this.src='image1.png'" />
       </div>
 
-      <div class="nickname-badge">🌸 A World Full Of Happiness</div>
-      <h1>Wishing You The World, Chandu</h1>
+      <div class="hero-badge">🌸 MY COMFORT PLACE & BEST FRIEND</div>
+      <h1 class="hero-title">Wishing You The World, Chandu</h1>
       <div class="hero-subtitle">To my comfort place & bestest friend 🤍</div>
-      
-      <p class="hero-bio">
-        Wishing you all the joy, laughter, and light this world can hold. Whenever things feel heavy, never lose hope — 
-        <strong>because you yourself are a living miracle.</strong>
-      </p>
 
+      <div class="hero-msg-box">
+        <p>Wishing you all the joy, laughter, and light this world can hold. Whenever things feel heavy, never lose hope —</p>
+        <div class="hero-msg-punch">"Because you yourself are a living miracle." 🌸✨</div>
+      </div>
+
+      <!-- Stats Grid -->
       <div class="stats-grid">
         <div class="stat-card">
           <div class="val">Best Friend</div>
@@ -870,104 +965,94 @@
       </div>
 
       <button class="btn-send-love" id="btnSendLove" onclick="celebrateLove()">
-        <span>Send Love to Chandu</span>
-        <span>💖</span>
+        <span>Send Love to Chandu 💖</span>
       </button>
     </section>
 
     <!-- PHOTO SCRAPBOOK KEEPSAKE (9 PHOTOS) -->
-    <div class="section-title">
-      <span>Cherished Memories</span>
-      <h2>Moments In Starlight 📸</h2>
+    <div class="section-header">
+      <span class="sub-tag">CHERISHED MEMORIES</span>
+      <h2 class="section-h2">Moments In Starlight 📸</h2>
+      <div class="section-hand-tag">Every moment with you is golden ✨</div>
     </div>
 
     <div class="scrapbook-grid" id="scrapbookGrid">
       <!-- 1: Metro mirror selfie (full width highlight) -->
-      <div class="photo-item span-2" onclick="openLightbox('sanghati1.png', 'Metro mirror memories with the favorite people! 🚇✨')">
+      <div class="photo-card span-2" onclick="openLightbox('sanghati1.png', 'Metro mirror memories with the favorite people! 🚇✨')">
         <div class="photo-pin">🌸</div>
-        <img src="sanghati1.png" alt="Metro Memories" loading="lazy" />
-        <div class="photo-tag-overlay">
-          <span>Metro Mirror Diaries 🚇</span>
-          <span>✦ Tap to View</span>
-        </div>
+        <img class="photo-card-img" src="sanghati1.png" alt="Metro Memories" loading="lazy" />
+        <div class="photo-card-cap">Metro Mirror Diaries 🚇</div>
+        <div class="photo-card-sub">Best memories with favorite people ✨</div>
       </div>
 
       <!-- 2: Solo Portrait -->
-      <div class="photo-item" onclick="openLightbox('sanghati2.png', 'The brightest smile & living miracle! 🤍')">
+      <div class="photo-card" onclick="openLightbox('sanghati2.png', 'The brightest smile & living miracle! 🤍')">
         <div class="photo-pin">✨</div>
-        <img src="sanghati2.png" alt="Chandu Portrait" loading="lazy" />
-        <div class="photo-tag-overlay">
-          <span>Pure Light ✨</span>
-        </div>
+        <img class="photo-card-img" src="sanghati2.png" alt="Chandu Portrait" loading="lazy" />
+        <div class="photo-card-cap">Pure Light ✨</div>
+        <div class="photo-card-sub">Living miracle 🤍</div>
       </div>
 
       <!-- 3: Group moments -->
-      <div class="photo-item" onclick="openLightbox('sanghati3.png', 'Friends who became home. Forever grateful! 🌸')">
+      <div class="photo-card" onclick="openLightbox('sanghati3.png', 'Friends who became home. Forever grateful! 🌸')">
         <div class="photo-pin">♥</div>
-        <img src="sanghati3.png" alt="Precious Moment" loading="lazy" />
-        <div class="photo-tag-overlay">
-          <span>Soul Sisters 🤍</span>
-        </div>
+        <img class="photo-card-img" src="sanghati3.png" alt="Precious Moment" loading="lazy" />
+        <div class="photo-card-cap">Soul Sisters 🌸</div>
+        <div class="photo-card-sub">Home in a friendship 🤍</div>
       </div>
 
       <!-- 4: Special memory -->
-      <div class="photo-item" onclick="openLightbox('sanghati4.png', 'Every second spent together is golden! 🌟')">
+      <div class="photo-card" onclick="openLightbox('sanghati4.png', 'Every second spent together is golden! 🌟')">
         <div class="photo-pin">✦</div>
-        <img src="sanghati4.png" alt="Memories in Frame" loading="lazy" />
-        <div class="photo-tag-overlay">
-          <span>Golden Hours 💫</span>
-        </div>
+        <img class="photo-card-img" src="sanghati4.png" alt="Memories in Frame" loading="lazy" />
+        <div class="photo-card-cap">Golden Hours 💫</div>
+        <div class="photo-card-sub">Pure happiness 🌟</div>
       </div>
 
       <!-- 5: Warm hug / smile -->
-      <div class="photo-item" onclick="openLightbox('sanghati5.png', 'Unfiltered laughter & endless conversations! 💖')">
+      <div class="photo-card" onclick="openLightbox('sanghati5.png', 'Unfiltered laughter & endless conversations! 💖')">
         <div class="photo-pin">🌸</div>
-        <img src="sanghati5.png" alt="Unfiltered Happiness" loading="lazy" />
-        <div class="photo-tag-overlay">
-          <span>Comfort Smiles 🌸</span>
-        </div>
+        <img class="photo-card-img" src="sanghati5.png" alt="Unfiltered Happiness" loading="lazy" />
+        <div class="photo-card-cap">Comfort Smiles 🌸</div>
+        <div class="photo-card-sub">Endless laughs 💖</div>
       </div>
 
       <!-- 6: Candid -->
-      <div class="photo-item" onclick="openLightbox('sanghati6.png', 'Life is so much better with you in it! ✨')">
+      <div class="photo-card" onclick="openLightbox('sanghati6.png', 'Life is so much better with you in it! ✨')">
         <div class="photo-pin">✨</div>
-        <img src="sanghati6.png" alt="Candid Joy" loading="lazy" />
-        <div class="photo-tag-overlay">
-          <span>My Safe Space 🤍</span>
-        </div>
+        <img class="photo-card-img" src="sanghati6.png" alt="Candid Joy" loading="lazy" />
+        <div class="photo-card-cap">My Safe Space 🤍</div>
+        <div class="photo-card-sub">Better together ✨</div>
       </div>
 
       <!-- 7: Beautiful candid -->
-      <div class="photo-item" onclick="openLightbox('sanghati7.png', 'Cherishing every single chapter of our friendship! 📖')">
+      <div class="photo-card" onclick="openLightbox('sanghati7.png', 'Cherishing every single chapter of our friendship! 📖')">
         <div class="photo-pin">♥</div>
-        <img src="sanghati7.png" alt="Special Memory" loading="lazy" />
-        <div class="photo-tag-overlay">
-          <span>Unbreakable Bond 🤝</span>
-        </div>
+        <img class="photo-card-img" src="sanghati7.png" alt="Special Memory" loading="lazy" />
+        <div class="photo-card-cap">Unbreakable Bond 🤝</div>
+        <div class="photo-card-sub">Every chapter counts 📖</div>
       </div>
 
       <!-- 8: Joyful snapshot -->
-      <div class="photo-item" onclick="openLightbox('sanghati8.png', 'Always by your side, cheering the loudest! 📣')">
+      <div class="photo-card" onclick="openLightbox('sanghati8.png', 'Always by your side, cheering the loudest! 📣')">
         <div class="photo-pin">✦</div>
-        <img src="sanghati8.png" alt="Together Always" loading="lazy" />
-        <div class="photo-tag-overlay">
-          <span>Always Rooting 🌟</span>
-        </div>
+        <img class="photo-card-img" src="sanghati8.png" alt="Together Always" loading="lazy" />
+        <div class="photo-card-cap">Always Rooting 🌟</div>
+        <div class="photo-card-sub">Cheering loudest 📣</div>
       </div>
 
       <!-- 9: Sweet memory -->
-      <div class="photo-item span-2" onclick="openLightbox('sanghati9.png', 'A whole universe of happiness to my bestest friend forever! 🌸💖')">
+      <div class="photo-card span-2" onclick="openLightbox('sanghati9.png', 'A whole universe of happiness to my bestest friend forever! 🌸💖')">
         <div class="photo-pin">💫</div>
-        <img src="sanghati9.png" alt="Forever Friend" loading="lazy" />
-        <div class="photo-tag-overlay">
-          <span>Forever & Always Best Friends 🤍</span>
-          <span>✦ Tap to View</span>
-        </div>
+        <img class="photo-card-img" src="sanghati9.png" alt="Forever Friend" loading="lazy" />
+        <div class="photo-card-cap">Forever & Always Best Friends 🤍</div>
+        <div class="photo-card-sub">A universe of happiness for you 🌸💖</div>
       </div>
     </div>
 
     <!-- INTERACTIVE COMFORT JAR / DAILY DOSE OF HOPE -->
     <div class="comfort-jar-box">
+      <div class="comfort-jar-stamp">COMFORT & HOPE KEEPSAKE</div>
       <div class="comfort-jar-icon">✨🏺✨</div>
       <h3>Chandu's Comfort Star Jar</h3>
       <p>Whenever you need a reminder of how cherished and incredible you are, tap the jar!</p>
@@ -977,15 +1062,14 @@
       </div>
 
       <button class="btn-draw-hope" onclick="drawNewHope()">
-        <span>Draw a Star Wish</span>
-        <span>🌟</span>
+        <span>Draw a Star Wish 🌟</span>
       </button>
     </div>
 
     <!-- REMINDERS SECTION -->
-    <div class="section-title">
-      <span>From The Heart</span>
-      <h2>Things You Must Remember</h2>
+    <div class="section-header">
+      <span class="sub-tag">FROM THE HEART</span>
+      <h2 class="section-h2">Things You Must Remember 🌸</h2>
     </div>
 
     <div class="timeline">
@@ -1038,7 +1122,7 @@
       </div>
     </div>
 
-    <!-- LETTER CARD: A PROMISE & A REMINDER -->
+    <!-- NOTE CARD: A PROMISE & A REMINDER -->
     <div class="note-card">
       <div class="rx-symbol">✨</div>
       <div class="note-header">A PROMISE & A REMINDER</div>
@@ -1058,10 +1142,12 @@
     </div>
 
     <!-- FOOTER -->
-    <footer>
+    <footer class="footer-love">
       <h3>Always Rooting For You, Chandu 🌸</h3>
       <p>Forever proud, forever grateful, forever your friend, Sanghati</p>
+      <div class="footer-stamp">Made with infinite love & bestie magic ✨</div>
     </footer>
+
   </main>
 
   <!-- LIGHTBOX MODAL -->
@@ -1075,63 +1161,88 @@
 
   <script>
     /* ============================================================
-       CANVAS AMBIENT FLOATING PARTICLES
+       THREE.JS 3D BACKGROUND (Pastel Rose, Soft Lavender & Cream)
        ============================================================ */
-    const canvas = document.getElementById('ambient-canvas');
-    const ctx = canvas.getContext('2d');
-    let particles = [];
-    const NUM_PARTICLES = 40;
+    let bgScene, bgCamera, bgRenderer;
+    let floatingSpheres = [];
 
-    function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
+    function initThreeBackground() {
+      const container = document.getElementById('webgl-container');
+      bgScene = new THREE.Scene();
+      bgCamera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+      bgCamera.position.z = 24;
 
-    class Particle {
-      constructor() {
-        this.reset();
-      }
-      reset() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 3 + 1;
-        this.speedY = Math.random() * 0.4 + 0.15;
-        this.alpha = Math.random() * 0.4 + 0.15;
-        this.color = Math.random() > 0.4 ? '#EC4899' : (Math.random() > 0.5 ? '#8B5CF6' : '#F472B6');
-      }
-      update() {
-        this.y -= this.speedY;
-        if (this.y < -10) {
-          this.y = canvas.height + 10;
-          this.x = Math.random() * canvas.width;
-        }
-      }
-      draw() {
-        ctx.save();
-        ctx.globalAlpha = this.alpha;
-        ctx.fillStyle = this.color;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-      }
-    }
+      bgRenderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: "high-performance" });
+      bgRenderer.setSize(window.innerWidth, window.innerHeight);
+      bgRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      container.appendChild(bgRenderer.domElement);
 
-    for (let i = 0; i < NUM_PARTICLES; i++) {
-      particles.push(new Particle());
-    }
+      const ambient = new THREE.AmbientLight(0xffffff, 1.3);
+      bgScene.add(ambient);
 
-    function animateParticles() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach(p => {
-        p.update();
-        p.draw();
+      const light1 = new THREE.DirectionalLight(0xfff0f5, 1.1);
+      light1.position.set(10, 20, 10);
+      bgScene.add(light1);
+
+      const light2 = new THREE.PointLight(0xf472b6, 1.2, 50);
+      light2.position.set(-10, -10, 10);
+      bgScene.add(light2);
+
+      // Floating 3D Pastel Spheres & Bubbles
+      const sphereColors = [0xf472b6, 0xfbcfe8, 0xc084fc, 0xfde047, 0xf43f5e, 0xffffff];
+      for (let i = 0; i < 22; i++) {
+        const radius = Math.random() * 0.45 + 0.2;
+        const geo = new THREE.SphereGeometry(radius, 20, 20);
+        const col = sphereColors[i % sphereColors.length];
+        const mat = new THREE.MeshPhongMaterial({
+          color: col,
+          shininess: 90,
+          transparent: true,
+          opacity: Math.random() * 0.35 + 0.25
+        });
+        const mesh = new THREE.Mesh(geo, mat);
+        mesh.position.set(
+          (Math.random() - 0.5) * 22,
+          (Math.random() - 0.5) * 30,
+          (Math.random() - 0.5) * 12
+        );
+        mesh.userData = {
+          speedY: Math.random() * 0.008 + 0.004,
+          speedRot: Math.random() * 0.01 + 0.005,
+          floatAmp: Math.random() * 0.015 + 0.005
+        };
+        bgScene.add(mesh);
+        floatingSpheres.push(mesh);
+      }
+
+      function animate() {
+        requestAnimationFrame(animate);
+        floatingSpheres.forEach(mesh => {
+          mesh.position.y += mesh.userData.speedY;
+          mesh.rotation.x += mesh.userData.speedRot;
+          mesh.rotation.y += mesh.userData.speedRot;
+          if (mesh.position.y > 15) {
+            mesh.position.y = -15;
+            mesh.position.x = (Math.random() - 0.5) * 22;
+          }
+        });
+        bgRenderer.render(bgScene, bgCamera);
+      }
+      animate();
+
+      window.addEventListener('resize', () => {
+        bgCamera.aspect = window.innerWidth / window.innerHeight;
+        bgCamera.updateProjectionMatrix();
+        bgRenderer.setSize(window.innerWidth, window.innerHeight);
       });
-      requestAnimationFrame(animateParticles);
     }
-    animateParticles();
+
+    // Initialize 3D on load
+    if (typeof THREE !== 'undefined') {
+      initThreeBackground();
+    } else {
+      window.addEventListener('load', initThreeBackground);
+    }
 
     /* ============================================================
        INTERACTIVE HOPE WISHES
@@ -1166,10 +1277,10 @@
       }, 200);
 
       confetti({
-        particleCount: 28,
+        particleCount: 30,
         spread: 60,
         origin: { y: 0.75 },
-        colors: ['#EC4899', '#8B5CF6', '#F472B6', '#FCD34D']
+        colors: ['#EC4899', '#DB2777', '#F472B6', '#FCD34D', '#C084FC']
       });
     }
 
@@ -1178,15 +1289,15 @@
        ============================================================ */
     function celebrateLove() {
       confetti({
-        particleCount: 65,
-        spread: 75,
+        particleCount: 70,
+        spread: 80,
         origin: { y: 0.5 },
-        colors: ['#EC4899', '#F472B6', '#8B5CF6', '#FCD34D', '#FF6584']
+        colors: ['#EC4899', '#DB2777', '#F472B6', '#FCD34D', '#FF6584']
       });
       const btn = document.getElementById('btnSendLove');
       btn.innerHTML = '<span>Love Sent To Chandu! 💖</span>';
       setTimeout(() => {
-        btn.innerHTML = '<span>Send Love to Chandu</span><span>💖</span>';
+        btn.innerHTML = '<span>Send Love to Chandu 💖</span>';
       }, 2500);
     }
 
@@ -1216,7 +1327,7 @@
     /* Auto-center active nav button on mobile */
     window.addEventListener('DOMContentLoaded', () => {
       const activeNav = document.querySelector('.nav-btn.active');
-      if (activeNav) {
+      if (activeNav && activeNav.id !== 'tabBtnDoctor') {
         activeNav.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
       }
     });
