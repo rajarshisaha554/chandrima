@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>The Musketeers | Friends Gallery & Moments with Dr. Chandrima</title>
+<meta name="description" content="A nostalgic photo collage gallery of the Musketeers and their special memories with Dr. Chandrima.">
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+
+<!-- Three.js from CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<!-- Canvas Confetti -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<style>
+  :root {
+    --cream: #FAF9F6;
+    --cream-deep: #F3F0EB;
+    --card-bg: rgba(255, 255, 255, 0.92);
+    --border-color: rgba(226, 232, 240, 0.85);
+    --slate-dark: #0F172A;
+    --slate-deep: #1E293B;
+    --teal-main: #0D9488;
+    --teal-dark: #115E59;
+    --teal-light: #CCFBF1;
+    --rose-gold: #F43F5E;
+    --amber-gold: #F59E0B;
+    --shadow-soft: 0 10px 25px rgba(15, 23, 42, 0.08);
+    --shadow-deep: 0 20px 45px rgba(15, 23, 42, 0.12);
+    --font-heading: 'Fraunces', serif;
+    --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-hand: 'Caveat', cursive;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    background-color: var(--cream);
+  }
+
+  body {
+    background:
+      radial-gradient(circle at 15% 10%, rgba(204, 251, 241, 0.65), transparent 45%),
+      radial-gradient(circle at 85% 30%, rgba(254, 240, 138, 0.5), transparent 50%),
+      radial-gradient(circle at 50% 85%, rgba(254, 205, 211, 0.45), transparent 55%),
+      var(--cream);
+    color: var(--slate-dark);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+    padding-bottom: env(safe-area-inset-bottom, 24px);
+  }
+
+  /* 3D WebGL Canvas Layer */
+  #webgl-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Top Status Bar */
+  .ecg-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(250, 249, 246, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(13, 148, 136, 0.2);
+    padding: 9px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 15px rgba(15, 23, 42, 0.04);
+  }
+
+  .ecg-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--teal-main);
+  }
+
+  .pulse-dot {
+    width: 9px;
+    height: 9px;
+    background: #0D9488;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(13, 148, 136, 0.5);
+    animation: pulseRing 1.3s infinite ease-out;
+  }
+  @keyframes pulseRing {
+    0% { transform: scale(0.9); opacity: 1; }
+    50% { transform: scale(1.4); opacity: 0.7; }
+    100% { transform: scale(0.9); opacity: 1; }
+  }
+
+  .bpm-tag {
+    font-size: 0.75rem;
+    background: var(--teal-light);
+    color: var(--teal-dark);
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 700;
+    border: 1px solid rgba(13, 148, 136, 0.25);
+  }
+
+  /* Main Container */
+  .app-container {
+    position: relative;
+    z-index: 10;
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 14px 16px 80px;
+  }
+
+  /* Segmented Page Navigation (4 items) */
+  .page-nav-wrapper {
+    margin: 6px auto 18px;
+    display: flex;
+    justify-content: center;
+  }
+  .nav-segmented {
+    display: flex;
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    border-radius: 999px;
+    padding: 4px;
+    box-shadow: 0 6px 20px rgba(15, 23, 42, 0.08);
+    gap: 4px;
+    width: 100%;
+    max-width: 480px;
+  }
+  .nav-btn {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 9px 8px;
+    border-radius: 999px;
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #64748B;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    white-space: nowrap;
+    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .nav-btn:hover {
+    color: var(--slate-dark);
+  }
+  .nav-btn.active.musketers-active {
+    background: linear-gradient(135deg, #0D9488, #059669);
+    box-shadow: 0 4px 14px rgba(13, 148, 136, 0.35);
+    color: #FFFFFF;
+  }
+  .nav-pulse-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #F59E0B;
+    display: inline-block;
+    box-shadow: 0 0 6px rgba(245, 158, 11, 0.6);
+  }
+
+  /* Hero Section: The Musketeers Card */
+  .musketers-hero-card {
+    background: linear-gradient(145deg, #FFFFFF 0%, #F0FDFA 50%, #FFFBEB 100%);
+    border: 1px solid rgba(13, 148, 136, 0.25);
+    border-radius: 28px;
+    padding: 28px 18px 22px;
+    box-shadow: var(--shadow-deep);
+    position: relative;
+    text-align: center;
+    overflow: hidden;
+  }
+  .musketers-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 14px;
+    background: rgba(13, 148, 136, 0.1);
+    border: 1px dashed rgba(13, 148, 136, 0.35);
+    border-radius: 999px;
+    color: var(--teal-main);
+    font-size: 0.74rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .musketers-title {
+    font-family: var(--font-heading);
+    font-size: 1.95rem;
+    color: var(--slate-deep);
+    line-height: 1.2;
+  }
+  .musketers-tagline {
+    font-family: var(--font-hand);
+    font-size: 1.5rem;
+    color: var(--teal-main);
+    margin: 6px 0 12px;
+    font-weight: 700;
+  }
+
+  /* Squad Note */
+  .musketers-note-card {
+    background: #FFFFFF;
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    border-radius: 18px;
+    padding: 14px 16px;
+    margin: 12px 0 16px;
+    text-align: left;
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05);
+    position: relative;
+  }
+  .musketers-note-card::before {
+    content: "📌";
+    position: absolute;
+    top: -12px;
+    right: 18px;
+    font-size: 1.2rem;
+  }
+  .musketers-note-card p {
+    font-size: 0.88rem;
+    line-height: 1.6;
+    color: #334155;
+    margin-bottom: 6px;
+  }
+  .musketers-note-card .squad-quote {
+    font-family: var(--font-hand);
+    font-size: 1.35rem;
+    color: var(--rose-gold);
+    font-weight: 700;
+    margin-top: 4px;
+  }
+
+  /* Action Buttons Bar */
+  .hero-action-bar {
+    display: flex;
+    gap: 8px;
+    margin-top: 14px;
+  }
+  .hero-btn {
+    flex: 1;
+    padding: 12px 14px;
+    border: none;
+    border-radius: 999px;
+    font-family: var(--font-body);
+    font-size: 0.86rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .hero-btn-primary {
+    background: linear-gradient(135deg, #0D9488, #059669);
+    color: #FFFFFF;
+    box-shadow: 0 6px 18px rgba(13, 148, 136, 0.35);
+  }
+  .hero-btn-secondary {
+    background: #FFFFFF;
+    color: var(--slate-deep);
+    border: 1px solid rgba(203, 213, 225, 0.8);
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+  }
+  .hero-btn:active {
+    transform: scale(0.96);
+  }
+
+  /* Section Header */
+  .section-header {
+    text-align: center;
+    margin-top: 32px;
+    margin-bottom: 16px;
+  }
+  .sub-tag {
+    font-size: 0.76rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--teal-main);
+    margin-bottom: 4px;
+  }
+  .section-h2 {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    color: var(--slate-deep);
+  }
+  .section-sub {
+    font-size: 0.82rem;
+    color: #64748B;
+    margin-top: 4px;
+  }
+
+  /* ASYMMETRIC PHOTO MOSAIC COLLAGE (Pure Photography / Zero Subtitles) */
+  .collage-mosaic {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-flow: dense;
+    gap: 12px;
+    margin-top: 16px;
+  }
+
+  .mosaic-tile {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    cursor: pointer;
+    background: #E2E8F0;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+    border: 3px solid #FFFFFF;
+    transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.28s;
+  }
+  .mosaic-tile:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 16px 36px rgba(15, 23, 42, 0.18);
+    z-index: 5;
+  }
+  .mosaic-tile:active {
+    transform: scale(0.97);
+  }
+
+  /* Varied mosaic tile heights & spans for organic collage feel */
+  .mosaic-tile.span-wide {
+    grid-column: span 2;
+    height: 250px;
+  }
+  .mosaic-tile.span-tall {
+    grid-row: span 2;
+    height: 380px;
+  }
+  .mosaic-tile.regular {
+    height: 185px;
+  }
+  .mosaic-tile.square {
+    height: 185px;
+  }
+  .mosaic-tile.medium {
+    height: 220px;
+  }
+
+  .mosaic-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+  }
+  .mosaic-tile:hover .mosaic-img {
+    transform: scale(1.06);
+  }
+
+  /* Subtle glass gradient overlay on hover with expand pill */
+  .mosaic-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(15, 23, 42, 0.45) 0%, transparent 50%);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    padding: 12px;
+  }
+  .mosaic-tile:hover .mosaic-overlay {
+    opacity: 1;
+  }
+  .mosaic-expand-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    color: var(--slate-dark);
+  }
+
+  /* Footer */
+  .footer-love {
+    text-align: center;
+    border-top: 1px solid rgba(226, 232, 240, 0.9);
+    margin-top: 40px;
+    padding-top: 24px;
+  }
+  .footer-love h3 {
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    color: var(--slate-deep);
+  }
+  .footer-love p {
+    font-family: var(--font-hand);
+    font-size: 1.6rem;
+    color: var(--teal-main);
+    margin-top: 6px;
+  }
+
+  /* Lightbox Modal with Next/Previous */
+  .lightbox {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(15, 23, 42, 0.82);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 16px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .lightbox.open {
+    display: flex;
+    opacity: 1;
+  }
+  .lightbox-card {
+    background: #FFFFFF;
+    border-radius: 22px;
+    padding: 14px 14px 20px;
+    max-width: 420px;
+    width: 100%;
+    transform: scale(0.9);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 25px 60px rgba(0,0,0,0.35);
+    text-align: center;
+    position: relative;
+  }
+  .lightbox.open .lightbox-card {
+    transform: scale(1);
+  }
+  .lightbox-img-box {
+    width: 100%;
+    height: 380px;
+    max-height: 52vh;
+    border-radius: 16px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05);
+  }
+  .lightbox-counter {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(4px);
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 999px;
+  }
+
+  /* Lightbox Navigation Buttons */
+  .lightbox-nav-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 14px;
+    gap: 8px;
+  }
+  .lb-btn {
+    background: #F1F5F9;
+    color: var(--slate-deep);
+    border: none;
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .lb-btn:hover {
+    background: #E2E8F0;
+  }
+  .lb-close-btn {
+    background: var(--slate-deep);
+    color: #FFFFFF;
+    border: none;
+    padding: 8px 22px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 0.84rem;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<!-- Three.js Canvas Layer -->
+<div id="webgl-container"></div>
+
+<!-- Mobile Status Bar -->
+<div class="ecg-topbar">
+  <div class="ecg-left">
+    <div class="pulse-dot"></div>
+    <span>THE MUSKETEERS</span>
+  </div>
+  <div style="font-size:0.8rem; font-weight:700; color:var(--teal-main);">✨ Friends Forever</div>
+  <div class="bpm-tag">SQUAD 🥂</div>
+</div>
+
+<main class="app-container">
+
+  <!-- TOP PAGE NAVIGATION (4 TABS) -->
+  <div class="page-nav-wrapper">
+    <div class="nav-segmented">
+      <a href="index.html" class="nav-btn" id="tabBtnDoctor">
+        <span>🩺 Chandrima</span>
+      </a>
+      <a href="sankha.html" class="nav-btn" id="tabBtnSankha">
+        <span class="nav-pulse-dot"></span>
+        <span>🎒 Sankha</span>
+      </a>
+      <a href="debjit.html" class="nav-btn" id="tabBtnDebjit">
+        <span>👻 Debjit</span>
+      </a>
+      <a href="musketers.html" class="nav-btn active musketers-active" id="tabBtnMusketeers">
+        <span>✨ Musketeers</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- HERO SECTION -->
+  <section class="musketers-hero-card">
+    <div class="musketers-badge">
+      <span>⚔️ SQUAD MEMORIES & ADVENTURES</span>
+    </div>
+    <h1 class="musketers-title">The Musketeers 🥂</h1>
+    <div class="musketers-tagline">"All for one, and one for all!"</div>
+
+    <div class="musketers-note-card">
+      <p>
+        Some friendships don't need daily check-ins—just one meetup and it feels like school recess all over again! From the endless gossips to unstoppable laughter, here's our special memory wall with Dr. Chandrima.
+      </p>
+      <div class="squad-quote">
+        "Friends who eat together, laugh together, and cheer for Dr. Chandrima forever!"
+      </div>
+    </div>
+
+    <div class="hero-action-bar">
+      <button class="hero-btn hero-btn-primary" onclick="triggerMusketeerConfetti()">
+        <span>🎉 Cheer Squad!</span>
+      </button>
+      <button class="hero-btn hero-btn-secondary" onclick="shuffleCollage()">
+        <span>🔀 Shuffle Wall</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- SECTION HEADER -->
+  <section class="section-header">
+    <div class="sub-tag">Memory Wall</div>
+    <h2 class="section-h2">The Musketeers Collage 📸</h2>
+    <div class="section-sub">Tap any photo to view full size</div>
+  </section>
+
+  <!-- COLLAGE MOSAIC -->
+  <div class="collage-mosaic" id="collageGrid">
+    <!-- Rendered dynamically by JavaScript -->
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer-love">
+    <h3>Cheers to Dr. Chandrima!</h3>
+    <p>From Your Forever Musketeers 💖</p>
+    <div style="font-size:0.78rem; color:#64748B; margin-top:14px;">
+      Forever your cheerleaders, no matter how busy hospital rounds get!
+    </div>
+  </footer>
+
+</main>
+
+<!-- Lightbox Modal (Clean, photo-first design) -->
+<div class="lightbox" id="lightbox">
+  <div class="lightbox-card">
+    <div class="lightbox-img-box" id="lightboxImg">
+      <div class="lightbox-counter" id="lightboxCounter">1 / 14</div>
+    </div>
+    <div class="lightbox-nav-row">
+      <button class="lb-btn" onclick="prevPhoto()">◀ Prev</button>
+      <button class="lb-close-btn" id="lightboxClose">Close</button>
+      <button class="lb-btn" onclick="nextPhoto()">Next ▶</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   1. MUSKETEERS PHOTO DATA (14 IMAGES - ZERO SUBTITLES)
+   ============================================================ */
+const SQUAD_PHOTOS = [
+  { id: 1, src: "musketers_1.jpeg", spanClass: "span-wide" },
+  { id: 2, src: "musketers_2.jpeg", spanClass: "regular" },
+  { id: 3, src: "musketers_3.jpeg", spanClass: "regular" },
+  { id: 4, src: "musketers_4.jpeg", spanClass: "span-tall" },
+  { id: 5, src: "musketers_5.jpeg", spanClass: "square" },
+  { id: 6, src: "musketers_6.jpeg", spanClass: "square" },
+  { id: 7, src: "musketers_7.jpeg", spanClass: "span-wide" },
+  { id: 8, src: "musketers_8.jpeg", spanClass: "medium" },
+  { id: 9, src: "musketers_9.jpeg", spanClass: "medium" },
+  { id: 10, src: "musketers_10.jpeg", spanClass: "square" },
+  { id: 11, src: "musketers_11.jpeg", spanClass: "span-tall" },
+  { id: 12, src: "musketers_12.jpeg", spanClass: "square" },
+  { id: 13, src: "musketers_13.jpeg", spanClass: "regular" },
+  { id: 14, src: "musketers_14.jpeg", spanClass: "span-wide" }
+];
+
+let currentPhotoIndex = 0;
+
+/* ============================================================
+   2. BUILD ASYMMETRIC COLLAGE MOSAIC
+   ============================================================ */
+function buildCollage(photoList = SQUAD_PHOTOS) {
+  const container = document.getElementById('collageGrid');
+  container.innerHTML = '';
+
+  photoList.forEach((p, idx) => {
+    const tile = document.createElement('div');
+    tile.className = `mosaic-tile ${p.spanClass}`;
+
+    const img = document.createElement('img');
+    img.className = 'mosaic-img';
+    img.src = p.src;
+    img.alt = `Musketeers Photo ${idx + 1}`;
+    img.loading = "lazy";
+
+    const overlay = document.createElement('div');
+    overlay.className = 'mosaic-overlay';
+    overlay.innerHTML = '<div class="mosaic-expand-icon">🔍</div>';
+
+    tile.appendChild(img);
+    tile.appendChild(overlay);
+
+    tile.addEventListener('click', () => {
+      openLightboxByIndex(idx);
+    });
+
+    container.appendChild(tile);
+  });
+}
+
+function shuffleCollage() {
+  const shuffledImgs = SQUAD_PHOTOS.map(p => p.src).sort(() => Math.random() - 0.5);
+  const newPhotos = SQUAD_PHOTOS.map((p, i) => ({
+    ...p,
+    src: shuffledImgs[i]
+  }));
+  buildCollage(newPhotos);
+  triggerMusketeerConfetti(0.7);
+}
+
+/* ============================================================
+   3. LIGHTBOX WITH NEXT / PREV NAVIGATION
+   ============================================================ */
+function openLightboxByIndex(index) {
+  currentPhotoIndex = index;
+  renderLightbox();
+  document.getElementById('lightbox').classList.add('open');
+}
+
+function renderLightbox() {
+  const p = SQUAD_PHOTOS[currentPhotoIndex];
+  const imgBox = document.getElementById('lightboxImg');
+  const counter = document.getElementById('lightboxCounter');
+
+  imgBox.style.backgroundImage = `url('${p.src}')`;
+  counter.innerText = `${currentPhotoIndex + 1} / ${SQUAD_PHOTOS.length}`;
+}
+
+function nextPhoto() {
+  currentPhotoIndex = (currentPhotoIndex + 1) % SQUAD_PHOTOS.length;
+  renderLightbox();
+}
+
+function prevPhoto() {
+  currentPhotoIndex = (currentPhotoIndex - 1 + SQUAD_PHOTOS.length) % SQUAD_PHOTOS.length;
+  renderLightbox();
+}
+
+document.getElementById('lightboxClose').addEventListener('click', () => {
+  document.getElementById('lightbox').classList.remove('open');
+});
+
+document.getElementById('lightbox').addEventListener('click', (e) => {
+  if (e.target.id === 'lightbox') {
+    document.getElementById('lightbox').classList.remove('open');
+  }
+});
+
+// Keyboard arrow navigation
+window.addEventListener('keydown', (e) => {
+  if (!document.getElementById('lightbox').classList.contains('open')) return;
+  if (e.key === 'ArrowRight') nextPhoto();
+  if (e.key === 'ArrowLeft') prevPhoto();
+  if (e.key === 'Escape') document.getElementById('lightbox').classList.remove('open');
+});
+
+/* ============================================================
+   4. THREE.JS 3D BACKGROUND (Floating Golden & Teal Crystals)
+   ============================================================ */
+let bgScene, bgCamera, bgRenderer;
+let floatingElements = [];
+
+function initThreeBackground() {
+  const container = document.getElementById('webgl-container');
+  bgScene = new THREE.Scene();
+  bgCamera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+  bgCamera.position.z = 24;
+
+  bgRenderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: "high-performance" });
+  bgRenderer.setSize(window.innerWidth, window.innerHeight);
+  bgRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  container.appendChild(bgRenderer.domElement);
+
+  const ambient = new THREE.AmbientLight(0xffffff, 1.2);
+  bgScene.add(ambient);
+
+  const light1 = new THREE.DirectionalLight(0xfffbeb, 1.0);
+  light1.position.set(10, 20, 10);
+  bgScene.add(light1);
+
+  const light2 = new THREE.PointLight(0x0d9488, 1.2, 50);
+  light2.position.set(-10, -10, 10);
+  bgScene.add(light2);
+
+  // Floating friendship stars & gems (Octahedrons & Icosahedrons)
+  const colors = [0x0d9488, 0x14b8a6, 0xf59e0b, 0xfbbf24, 0xf43f5e, 0x38bdf8];
+  const geo1 = new THREE.OctahedronGeometry(0.38, 0);
+  const geo2 = new THREE.IcosahedronGeometry(0.32, 0);
+
+  for (let i = 0; i < 24; i++) {
+    const pickGeo = i % 2 === 0 ? geo1 : geo2;
+    const mat = new THREE.MeshPhongMaterial({
+      color: colors[i % colors.length],
+      shininess: 95,
+      transparent: true,
+      opacity: 0.6
+    });
+
+    const mesh = new THREE.Mesh(pickGeo, mat);
+    mesh.position.set(
+      (Math.random() - 0.5) * 28,
+      (Math.random() - 0.5) * 40,
+      (Math.random() - 0.5) * 16
+    );
+    mesh.rotation.set(Math.random() * 3, Math.random() * 3, Math.random() * 3);
+
+    mesh.userData = {
+      rotX: (Math.random() - 0.5) * 0.015,
+      rotY: (Math.random() - 0.5) * 0.018,
+      speedY: 0.007 + Math.random() * 0.011,
+      wobble: Math.random() * Math.PI
+    };
+
+    bgScene.add(mesh);
+    floatingElements.push(mesh);
+  }
+
+  window.addEventListener('resize', () => {
+    bgCamera.aspect = window.innerWidth / window.innerHeight;
+    bgCamera.updateProjectionMatrix();
+    bgRenderer.setSize(window.innerWidth, window.innerHeight);
+  });
+}
+
+function animateThreeBackground() {
+  requestAnimationFrame(animateThreeBackground);
+
+  floatingElements.forEach(el => {
+    el.rotation.x += el.userData.rotX;
+    el.rotation.y += el.userData.rotY;
+    el.position.y += el.userData.speedY;
+    el.userData.wobble += 0.02;
+    el.position.x += Math.sin(el.userData.wobble) * 0.004;
+    if (el.position.y > 22) el.position.y = -22;
+  });
+
+  bgRenderer.render(bgScene, bgCamera);
+}
+
+/* ============================================================
+   5. CONFETTI BURST
+   ============================================================ */
+function triggerMusketeerConfetti(intensity = 1.2) {
+  if (typeof confetti === 'function') {
+    confetti({
+      particleCount: Math.floor(75 * intensity),
+      spread: 75,
+      origin: { y: 0.65 },
+      colors: ['#0D9488', '#F59E0B', '#F43F5E', '#38BDF8', '#10B981', '#FBBF24']
+    });
+  }
+}
+
+/* ============================================================
+   INIT EVERYTHING ON LOAD
+   ============================================================ */
+window.addEventListener('DOMContentLoaded', () => {
+  initThreeBackground();
+  animateThreeBackground();
+  buildCollage(SQUAD_PHOTOS);
+
+  setTimeout(() => {
+    triggerMusketeerConfetti(0.85);
+  }, 600);
+});
+</script>
+</body>
+</html>

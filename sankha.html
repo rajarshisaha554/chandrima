@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Sankha's Wish & Arcade | To Dr. Chandrima</title>
+<meta name="description" content="Sankha's special birthday wish, school memories, and fun interactive games for Dr. Chandrima.">
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+
+<!-- Three.js from CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<!-- Canvas Confetti -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<style>
+  :root {
+    --cream: #FFFDF9;
+    --cream-deep: #F8F4EE;
+    --cream-card: rgba(255, 255, 255, 0.88);
+    --cream-card-border: rgba(230, 218, 206, 0.7);
+    --plum: #24304A;
+    --plum-soft: #64748B;
+    --gold: #D97706;
+    --gold-deep: #B45309;
+    --amber-soft: #FEF3C7;
+    --shadow-soft: 0 10px 25px rgba(36, 48, 74, 0.08);
+    --shadow-deep: 0 20px 45px rgba(36, 48, 74, 0.12);
+    --font-heading: 'Fraunces', serif;
+    --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-hand: 'Caveat', cursive;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    background-color: var(--cream);
+  }
+
+  body {
+    background:
+      radial-gradient(circle at 15% 10%, rgba(254, 243, 199, 0.6), transparent 45%),
+      radial-gradient(circle at 85% 30%, rgba(255, 237, 213, 0.5), transparent 50%),
+      radial-gradient(circle at 50% 85%, rgba(254, 215, 170, 0.45), transparent 55%),
+      var(--cream);
+    color: var(--plum);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+    padding-bottom: env(safe-area-inset-bottom, 24px);
+  }
+
+  /* 3D WebGL Canvas Layer */
+  #webgl-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Top Status Bar */
+  .ecg-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255, 253, 249, 0.9);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(245, 158, 11, 0.25);
+    padding: 9px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 15px rgba(36, 48, 74, 0.04);
+  }
+
+  .ecg-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--gold-deep);
+  }
+
+  .pulse-dot {
+    width: 9px;
+    height: 9px;
+    background: #F59E0B;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+    animation: pulseRing 1.3s infinite ease-out;
+  }
+  @keyframes pulseRing {
+    0% { transform: scale(0.9); opacity: 1; }
+    50% { transform: scale(1.4); opacity: 0.7; }
+    100% { transform: scale(0.9); opacity: 1; }
+  }
+
+  .bpm-tag {
+    font-size: 0.75rem;
+    background: var(--amber-soft);
+    color: var(--gold-deep);
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 700;
+    border: 1px solid rgba(245, 158, 11, 0.25);
+  }
+
+  /* Main Container */
+  .app-container {
+    position: relative;
+    z-index: 10;
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 14px 18px 80px;
+  }
+
+  /* Segmented Page Navigation */
+  .page-nav-wrapper {
+    margin: 6px auto 18px;
+    display: flex;
+    justify-content: center;
+  }
+  .nav-segmented {
+    display: flex;
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--cream-card-border);
+    border-radius: 999px;
+    padding: 4px;
+    box-shadow: 0 6px 20px rgba(36, 48, 74, 0.08);
+    gap: 4px;
+    width: 100%;
+    max-width: 480px;
+  }
+  .nav-btn {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 9px 8px;
+    border-radius: 999px;
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--plum-soft);
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    white-space: nowrap;
+    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .nav-btn:hover {
+    color: var(--plum);
+  }
+  .nav-btn.active.sankha-active {
+    background: linear-gradient(135deg, #F59E0B, #EA580C);
+    box-shadow: 0 4px 14px rgba(234, 88, 12, 0.35);
+    color: #FFFFFF;
+  }
+  .nav-pulse-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #10B981;
+    display: inline-block;
+    box-shadow: 0 0 6px rgba(16, 185, 129, 0.6);
+  }
+
+  /* Corkboard Activity Corner */
+  .corkboard-desk {
+    background: #FFFBEB;
+    border: 3px solid #F59E0B;
+    border-radius: 26px;
+    padding: 24px 18px 20px;
+    box-shadow: 0 12px 30px rgba(180, 83, 9, 0.12);
+    position: relative;
+    animation: fadeIn 0.4s ease-out;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .corkboard-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    background: #FEF3C7;
+    border: 1px dashed #D97706;
+    border-radius: 999px;
+    color: #92400E;
+    font-size: 0.76rem;
+    font-weight: 700;
+  }
+  .corkboard-layout {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 14px;
+    text-align: left;
+  }
+  .cork-polaroid {
+    flex-shrink: 0;
+    width: 110px;
+    background: #FFFFFF;
+    padding: 6px 6px 14px;
+    border-radius: 6px;
+    box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+    border: 1px solid #E2E8F0;
+    transform: rotate(-4deg);
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  .cork-polaroid:hover {
+    transform: rotate(0deg) scale(1.04);
+  }
+  .cork-polaroid img {
+    width: 100%;
+    height: 105px;
+    object-fit: cover;
+    border-radius: 4px;
+    display: block;
+  }
+  .cork-polaroid span {
+    font-family: var(--font-hand);
+    font-size: 0.95rem;
+    color: #B45309;
+    font-weight: 700;
+    margin-top: 4px;
+    display: block;
+  }
+  .cork-content {
+    flex: 1;
+  }
+  .cork-title {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    color: #78350F;
+    line-height: 1.15;
+  }
+  .cork-tagline {
+    font-family: var(--font-hand);
+    font-size: 1.25rem;
+    color: #D97706;
+    font-weight: 700;
+    margin: 4px 0 8px;
+  }
+  .cork-postit {
+    background: #FEF08A;
+    border-left: 4px solid #CA8A04;
+    padding: 10px 12px;
+    border-radius: 0 10px 10px 0;
+    font-size: 0.85rem;
+    color: #713F12;
+    line-height: 1.45;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  }
+
+  .celebrate-btn {
+    display: block;
+    width: 100%;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 999px;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-weight: 700;
+    color: white;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+    background: linear-gradient(135deg, #F59E0B, #D97706);
+    box-shadow: 0 8px 20px rgba(217, 119, 6, 0.3);
+    margin-top: 16px;
+  }
+  .celebrate-btn:active {
+    transform: scale(0.97);
+  }
+
+  /* Game Zone Horizontal Dashboard */
+  .game-hub-banner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(135deg, #F59E0B, #EA580C);
+    color: white;
+    padding: 14px 18px;
+    border-radius: 18px;
+    margin: 22px 0 16px;
+    box-shadow: 0 6px 18px rgba(234, 88, 12, 0.25);
+  }
+  .game-hub-banner h3 {
+    font-family: var(--font-heading);
+    font-size: 1.12rem;
+  }
+  .game-hub-banner span {
+    font-size: 0.75rem;
+    opacity: 0.9;
+  }
+
+  /* Game Cabinet Cards */
+  .game-cabinet {
+    background: #FFFFFF;
+    border: 2px solid #FDE68A;
+    border-radius: 20px;
+    padding: 18px 16px;
+    margin-top: 16px;
+    box-shadow: 0 8px 22px rgba(245, 158, 11, 0.08);
+  }
+  .game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .game-title {
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-weight: 700;
+    color: #78350F;
+  }
+  .game-sub {
+    font-size: 0.76rem;
+    color: var(--plum-soft);
+    margin-top: 2px;
+  }
+
+  /* Game 1: Tiffin Box Speed Grabber */
+  .tiffin-game-arena {
+    background: linear-gradient(180deg, #FEF3C7 0%, #FFFDF9 100%);
+    border: 2px dashed #FCD34D;
+    border-radius: 18px;
+    height: 220px;
+    position: relative;
+    overflow: hidden;
+    touch-action: manipulation;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+  }
+  .tiffin-stat-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: #FFFBEB;
+    border-radius: 12px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #92400E;
+    margin-bottom: 10px;
+  }
+  .tiffin-item-target {
+    position: absolute;
+    font-size: 2.6rem;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    transition: transform 0.1s;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));
+    animation: popSnack 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .tiffin-item-target:active {
+    transform: scale(1.35) rotate(15deg);
+  }
+  @keyframes popSnack {
+    from { transform: scale(0); }
+    to { transform: scale(1); }
+  }
+  .game-btn {
+    background: linear-gradient(135deg, #F59E0B, #D97706);
+    color: white;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 14px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(217, 119, 6, 0.3);
+    font-family: var(--font-body);
+    transition: transform 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .game-btn:active {
+    transform: scale(0.95);
+  }
+
+  /* Game 2: Memory Card Match */
+  .memory-match-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .flip-card {
+    height: 70px;
+    perspective: 800px;
+    cursor: pointer;
+  }
+  .flip-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-style: preserve-3d;
+    border-radius: 14px;
+  }
+  .flip-card.flipped .flip-card-inner,
+  .flip-card.matched .flip-card-inner {
+    transform: rotateY(180deg);
+  }
+  .flip-card-front, .flip-card-back {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .flip-card-front {
+    background: linear-gradient(135deg, #F1F5F9, #E2E8F0);
+    border: 2px solid #CBD5E1;
+    font-size: 1.15rem;
+    color: #94A3B8;
+  }
+  .flip-card-back {
+    background: #FFFBEB;
+    border: 2px solid #FCD34D;
+    font-size: 1.75rem;
+    transform: rotateY(180deg);
+  }
+  .flip-card.matched .flip-card-back {
+    background: #ECFDF5;
+    border-color: #34D399;
+    animation: matchGlow 0.4s ease-out;
+  }
+  @keyframes matchGlow {
+    50% { transform: rotateY(180deg) scale(1.08); }
+  }
+
+  /* Game 3: Fortune & Wish Cracker */
+  .cracker-box {
+    background: #FFFDF9;
+    border: 2px dashed #F59E0B;
+    border-radius: 18px;
+    padding: 18px;
+    text-align: center;
+    margin-top: 14px;
+  }
+  .cracker-btn {
+    background: linear-gradient(135deg, #EC4899, #F43F5E);
+    color: white;
+    border: none;
+    padding: 12px 22px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 0.92rem;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(244, 63, 94, 0.35);
+    margin-top: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .cracker-btn:active {
+    transform: scale(0.96);
+  }
+  .cracker-result {
+    margin-top: 14px;
+    min-height: 55px;
+    font-family: var(--font-hand);
+    font-size: 1.45rem;
+    color: #BE123C;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.25s;
+    line-height: 1.35;
+  }
+
+  /* Footer */
+  .footer-love {
+    text-align: center;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid var(--cream-card-border);
+  }
+  .footer-love h3 {
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    color: var(--plum);
+  }
+  .footer-love p {
+    font-family: var(--font-hand);
+    font-size: 1.6rem;
+    color: #D97706;
+    margin-top: 6px;
+  }
+
+  /* Lightbox */
+  .lightbox {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .lightbox.open {
+    display: flex;
+    opacity: 1;
+  }
+  .lightbox-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 14px 14px 22px;
+    max-width: 360px;
+    width: 100%;
+    transform: scale(0.9);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+    text-align: center;
+  }
+  .lightbox.open .lightbox-card {
+    transform: scale(1);
+  }
+  .lightbox-img-box {
+    width: 100%;
+    height: 380px;
+    max-height: 55vh;
+    border-radius: 14px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .lightbox-text {
+    font-family: var(--font-heading);
+    font-style: italic;
+    color: var(--plum);
+    margin-top: 14px;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+  .lightbox-close-btn {
+    margin-top: 14px;
+    background: var(--plum);
+    color: #fff;
+    border: none;
+    padding: 8px 24px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<!-- Background Three.js floating elements -->
+<div id="webgl-container"></div>
+
+<!-- Top Status Bar -->
+<div class="ecg-topbar">
+  <div class="ecg-left">
+    <div class="pulse-dot"></div>
+    <span>SANKHA'S CORNER</span>
+  </div>
+  <div style="font-size:0.8rem; font-weight:700; color:#B45309;">🎒 School Days</div>
+  <div class="bpm-tag">ARCADE 🎮</div>
+</div>
+
+<main class="app-container">
+
+  <!-- TOP PAGE NAVIGATION -->
+  <div class="page-nav-wrapper">
+    <div class="nav-segmented">
+      <a href="index.html" class="nav-btn" id="tabBtnDoctor">
+        <span>🩺 Chandrima</span>
+      </a>
+      <a href="sankha.html" class="nav-btn active sankha-active" id="tabBtnSankha">
+        <span class="nav-pulse-dot"></span>
+        <span>🎒 Sankha</span>
+      </a>
+      <a href="debjit.html" class="nav-btn" id="tabBtnDebjit">
+        <span>👻 Debjit</span>
+      </a>
+      <a href="musketers.html" class="nav-btn" id="tabBtnMusketeers">
+        <span>✨ Musketeers</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- CORKBOARD DESK (COMPACT HORIZONTAL SPLIT LAYOUT) -->
+  <section class="corkboard-desk">
+    <div class="corkboard-badge">
+      <span>📌 SANKHA'S ACTIVITY CORNER</span>
+    </div>
+
+    <div class="corkboard-layout">
+      <!-- Tilted Small Polaroid -->
+      <div class="cork-polaroid" onclick="openLightbox({src: 'image4.png', caption: 'School days nostalgia & golden laughs ✨'})">
+        <img src="image4.png" alt="Good Old Days" loading="eager">
+        <span>Good Times ✨</span>
+      </div>
+
+      <!-- Quick Sticky Note Message -->
+      <div class="cork-content">
+        <h2 class="cork-title">Sankha's Wish! 🎒</h2>
+        <div class="cork-tagline">"You were fun and something something..."</div>
+        <div class="cork-postit">
+          School was fun, we ate tiffin, went to events and picnics, and now you're becoming a doctor. That's pretty cool!
+        </div>
+      </div>
+    </div>
+
+    <button class="celebrate-btn" id="sankhaCheerBtn" onclick="triggerSankhaConfetti()">
+      Happy Birthday, Chandrima! 🎈
+    </button>
+  </section>
+
+  <!-- HORIZONTAL BANNER DIVIDER -->
+  <div class="game-hub-banner">
+    <div>
+      <h3>Sankha's Game Arcade 🕹️</h3>
+      <span>Beat all 3 school challenges!</span>
+    </div>
+    <span style="font-size: 1.5rem;">⭐</span>
+  </div>
+
+  <!-- GAME 1: TIFFIN RAIDER -->
+  <div class="game-cabinet">
+    <div class="game-header">
+      <div>
+        <div class="game-title">🥪 The Tiffin Box Grabber</div>
+        <div class="game-sub">Catch Sankha's snacks before they vanish!</div>
+      </div>
+      <span style="font-size: 1.4rem;">⚡</span>
+    </div>
+
+    <div class="tiffin-stat-bar">
+      <span>Score: <span id="tiffinScore" style="color:#D97706; font-size:1.1rem;">0</span></span>
+      <span>Time: <span id="tiffinTimer" style="color:#E11D48; font-size:1.1rem;">15s</span></span>
+      <span>Best: <span id="tiffinBest">0</span></span>
+    </div>
+
+    <div class="tiffin-game-arena" id="tiffinArena">
+      <div id="tiffinStartOverlay" style="text-align:center; z-index:5;">
+        <p style="font-size: 0.88rem; color:#92400E; margin-bottom: 12px; font-weight:600;">
+          Tap snacks fast to steal Sankha's lunchbox items!
+        </p>
+        <button class="game-btn" id="startTiffinBtn" onclick="startTiffinGame()">
+          <span>▶ Start Tiffin Rush</span>
+        </button>
+      </div>
+    </div>
+    <div id="tiffinMessage" style="font-size:0.8rem; text-align:center; margin-top:8px; color:var(--plum-soft); font-style:italic;">
+      Tap as many samosas, parathas & cupcakes as you can in 15s!
+    </div>
+  </div>
+
+  <!-- GAME 2: MEMORY MATCH -->
+  <div class="game-cabinet">
+    <div class="game-header">
+      <div>
+        <div class="game-title">🃏 School Days Memory Match</div>
+        <div class="game-sub">Flip & pair nostalgic school treasures!</div>
+      </div>
+      <button class="game-btn" style="padding: 6px 14px; font-size: 0.78rem;" onclick="resetMemoryGame()">
+        ↻ Reset
+      </button>
+    </div>
+
+    <div class="memory-match-grid" id="memoryGrid">
+      <!-- Generated by JavaScript -->
+    </div>
+    <div id="memoryStatus" style="font-size:0.82rem; text-align:center; margin-top:10px; color:#D97706; font-weight:700;">
+      Match all pairs to unlock celebratory confetti!
+    </div>
+  </div>
+
+  <!-- GAME 3: SANKHA'S FORTUNE & TREAT CRACKER -->
+  <div class="game-cabinet">
+    <div class="game-header">
+      <div>
+        <div class="game-title">🥠 Sankha's Treat & Wish Cracker</div>
+        <div class="game-sub">Crack open funny promises & warm wishes</div>
+      </div>
+      <span style="font-size: 1.4rem;">✨</span>
+    </div>
+
+    <div class="cracker-box">
+      <div style="font-size: 2.8rem; animation: pulseRing 2s infinite ease-in-out;" id="crackerIcon">🎁</div>
+      <div class="cracker-result" id="crackerResult">
+        "Tap below to open Sankha's mystery note!"
+      </div>
+      <button class="cracker-btn" onclick="crackSankhaWish()">
+        <span>Crack Open Another Wish! 💥</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- SANKHA PAGE FOOTER -->
+  <footer class="footer-love">
+    <h3>Cheers to Dr. Chandrima!</h3>
+    <p>From School Benches to Stethoscopes</p>
+    <div style="font-size:0.78rem; color:var(--plum-soft); margin-top:14px;">
+      Designed by Sankha for the best doctor-to-be!
+    </div>
+  </footer>
+
+</main>
+
+<!-- Lightbox Modal -->
+<div class="lightbox" id="lightbox">
+  <div class="lightbox-card">
+    <div class="lightbox-img-box" id="lightboxImg"></div>
+    <div class="lightbox-text" id="lightboxCap"></div>
+    <button class="lightbox-close-btn" id="lightboxClose">Close</button>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   THREE.JS 3D BACKGROUND
+   ============================================================ */
+let bgScene, bgCamera, bgRenderer;
+let floatingPills = [];
+let floatingSpheres = [];
+
+function initThreeBackground() {
+  const container = document.getElementById('webgl-container');
+  bgScene = new THREE.Scene();
+  bgCamera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+  bgCamera.position.z = 24;
+
+  bgRenderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: "high-performance" });
+  bgRenderer.setSize(window.innerWidth, window.innerHeight);
+  bgRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  container.appendChild(bgRenderer.domElement);
+
+  const ambient = new THREE.AmbientLight(0xffffff, 1.2);
+  bgScene.add(ambient);
+
+  const light1 = new THREE.DirectionalLight(0xfff5ea, 1.0);
+  light1.position.set(10, 20, 10);
+  bgScene.add(light1);
+
+  const light2 = new THREE.PointLight(0xfbbf24, 1.2, 50);
+  light2.position.set(-10, -10, 10);
+  bgScene.add(light2);
+
+  // Floating 3D Capsules
+  for (let i = 0; i < 14; i++) {
+    const pillGroup = new THREE.Group();
+    const colors = [0xf59e0b, 0xfbbf24, 0x38bdf8, 0x34d399, 0xf43f5e];
+    const pickColor = colors[i % colors.length];
+
+    const capGeo = new THREE.CylinderGeometry(0.32, 0.32, 0.7, 16);
+    const capMat1 = new THREE.MeshPhongMaterial({ color: pickColor, shininess: 90, transparent: true, opacity: 0.65 });
+    const capMat2 = new THREE.MeshPhongMaterial({ color: 0xffffff, shininess: 90, transparent: true, opacity: 0.7 });
+
+    const mesh1 = new THREE.Mesh(capGeo, capMat1);
+    mesh1.position.y = 0.35;
+    const mesh2 = new THREE.Mesh(capGeo, capMat2);
+    mesh2.position.y = -0.35;
+
+    const domeGeo = new THREE.SphereGeometry(0.32, 16, 16);
+    const dome1 = new THREE.Mesh(domeGeo, capMat1);
+    dome1.position.y = 0.7;
+    const dome2 = new THREE.Mesh(domeGeo, capMat2);
+    dome2.position.y = -0.7;
+
+    pillGroup.add(mesh1, mesh2, dome1, dome2);
+
+    pillGroup.position.set(
+      (Math.random() - 0.5) * 26,
+      (Math.random() - 0.5) * 36,
+      (Math.random() - 0.5) * 15
+    );
+    pillGroup.rotation.set(Math.random() * 3, Math.random() * 3, Math.random() * 3);
+
+    pillGroup.userData = {
+      rotX: (Math.random() - 0.5) * 0.012,
+      rotY: (Math.random() - 0.5) * 0.015,
+      speedY: 0.008 + Math.random() * 0.012
+    };
+
+    bgScene.add(pillGroup);
+    floatingPills.push(pillGroup);
+  }
+
+  // Floating spheres
+  const sphereGeo = new THREE.SphereGeometry(0.18, 12, 12);
+  for (let i = 0; i < 22; i++) {
+    const mat = new THREE.MeshPhongMaterial({
+      color: i % 2 === 0 ? 0xfde68a : 0xfbcfe8,
+      transparent: true,
+      opacity: 0.55
+    });
+    const sp = new THREE.Mesh(sphereGeo, mat);
+    sp.position.set((Math.random() - 0.5) * 30, (Math.random() - 0.5) * 45, (Math.random() - 0.5) * 16);
+    sp.userData = { speedY: 0.006 + Math.random() * 0.01, wobble: Math.random() * Math.PI };
+    bgScene.add(sp);
+    floatingSpheres.push(sp);
+  }
+
+  window.addEventListener('resize', () => {
+    bgCamera.aspect = window.innerWidth / window.innerHeight;
+    bgCamera.updateProjectionMatrix();
+    bgRenderer.setSize(window.innerWidth, window.innerHeight);
+  });
+}
+
+function animateThreeBackground() {
+  requestAnimationFrame(animateThreeBackground);
+
+  floatingPills.forEach(p => {
+    p.rotation.x += p.userData.rotX;
+    p.rotation.y += p.userData.rotY;
+    p.position.y += p.userData.speedY;
+    if (p.position.y > 20) p.position.y = -20;
+  });
+
+  floatingSpheres.forEach(s => {
+    s.position.y += s.userData.speedY;
+    s.userData.wobble += 0.02;
+    s.position.x += Math.sin(s.userData.wobble) * 0.005;
+    if (s.position.y > 22) s.position.y = -22;
+  });
+
+  bgRenderer.render(bgScene, bgCamera);
+}
+
+/* ============================================================
+   CONFETTI
+   ============================================================ */
+function triggerSankhaConfetti(intensity = 1.2) {
+  if (typeof confetti === 'function') {
+    confetti({
+      particleCount: Math.floor(65 * intensity),
+      spread: 70,
+      origin: { y: 0.65 },
+      colors: ['#F59E0B', '#EA580C', '#EC4899', '#38BDF8', '#10B981']
+    });
+  }
+}
+
+/* ============================================================
+   GAME 1: TIFFIN BOX SPEED GRABBER
+   ============================================================ */
+let tiffinScore = 0;
+let tiffinBest = 0;
+let tiffinTimeLeft = 15;
+let tiffinTimerInterval = null;
+let tiffinSpawnTimeout = null;
+let isTiffinRunning = false;
+
+const TIFFIN_ITEMS = ['🥪', '🥟', '🍱', '🍔', '🍕', '🥭', '🧁', '🍩', '🍫', '🧃'];
+
+function startTiffinGame() {
+  if (isTiffinRunning) return;
+  isTiffinRunning = true;
+  tiffinScore = 0;
+  tiffinTimeLeft = 15;
+
+  document.getElementById('tiffinScore').innerText = '0';
+  document.getElementById('tiffinTimer').innerText = '15s';
+  document.getElementById('tiffinStartOverlay').style.display = 'none';
+  document.getElementById('tiffinMessage').innerText = 'Tap the floating snacks fast!';
+
+  clearTiffinSnacks();
+  spawnTiffinSnack();
+
+  tiffinTimerInterval = setInterval(() => {
+    tiffinTimeLeft--;
+    document.getElementById('tiffinTimer').innerText = `${tiffinTimeLeft}s`;
+
+    if (tiffinTimeLeft <= 0) {
+      endTiffinGame();
+    }
+  }, 1000);
+}
+
+function clearTiffinSnacks() {
+  const arena = document.getElementById('tiffinArena');
+  const existing = arena.querySelectorAll('.tiffin-item-target');
+  existing.forEach(e => e.remove());
+}
+
+function spawnTiffinSnack() {
+  if (!isTiffinRunning) return;
+
+  const arena = document.getElementById('tiffinArena');
+  const snack = document.createElement('div');
+  snack.className = 'tiffin-item-target';
+  const emoji = TIFFIN_ITEMS[Math.floor(Math.random() * TIFFIN_ITEMS.length)];
+  snack.innerText = emoji;
+
+  const arenaWidth = arena.clientWidth - 70;
+  const arenaHeight = arena.clientHeight - 70;
+  const posX = Math.max(15, Math.floor(Math.random() * arenaWidth));
+  const posY = Math.max(15, Math.floor(Math.random() * arenaHeight));
+
+  snack.style.left = `${posX}px`;
+  snack.style.top = `${posY}px`;
+
+  snack.addEventListener('pointerdown', (e) => {
+    e.stopPropagation();
+    if (!isTiffinRunning) return;
+
+    tiffinScore++;
+    document.getElementById('tiffinScore').innerText = tiffinScore;
+
+    snack.style.transform = 'scale(1.5) rotate(25deg)';
+    snack.style.opacity = '0';
+    setTimeout(() => snack.remove(), 120);
+
+    clearTimeout(tiffinSpawnTimeout);
+    spawnTiffinSnack();
+  });
+
+  arena.appendChild(snack);
+
+  tiffinSpawnTimeout = setTimeout(() => {
+    if (snack.parentNode) snack.remove();
+    if (isTiffinRunning) spawnTiffinSnack();
+  }, 950);
+}
+
+function endTiffinGame() {
+  isTiffinRunning = false;
+  clearInterval(tiffinTimerInterval);
+  clearTimeout(tiffinSpawnTimeout);
+  clearTiffinSnacks();
+
+  if (tiffinScore > tiffinBest) {
+    tiffinBest = tiffinScore;
+    document.getElementById('tiffinBest').innerText = tiffinBest;
+  }
+
+  const overlay = document.getElementById('tiffinStartOverlay');
+  overlay.innerHTML = `
+    <div style="font-size:1.8rem; margin-bottom:4px;">🎉</div>
+    <div style="font-weight:800; font-size:1.15rem; color:#92400E; margin-bottom:4px;">
+      Tiffin Heist Over!
+    </div>
+    <p style="font-size:0.88rem; color:#B45309; margin-bottom:12px;">
+      You stole <strong>${tiffinScore} snacks</strong> from Sankha's box!
+    </p>
+    <button class="game-btn" onclick="startTiffinGame()">
+      <span>Play Again 🔄</span>
+    </button>
+  `;
+  overlay.style.display = 'block';
+
+  triggerSankhaConfetti(0.8);
+}
+
+/* ============================================================
+   GAME 2: MEMORY CARD MATCH
+   ============================================================ */
+const MEMORY_ICONS = ['🍱', '🚌', '🎒', '🩺', '🏆', '🍕'];
+let memoryCards = [];
+let flippedCards = [];
+let matchedCount = 0;
+
+function initMemoryGame() {
+  const grid = document.getElementById('memoryGrid');
+  grid.innerHTML = '';
+  flippedCards = [];
+  matchedCount = 0;
+  document.getElementById('memoryStatus').innerText = 'Match all pairs to unlock celebratory confetti!';
+
+  memoryCards = [...MEMORY_ICONS, ...MEMORY_ICONS].sort(() => Math.random() - 0.5);
+
+  memoryCards.forEach((icon, index) => {
+    const card = document.createElement('div');
+    card.className = 'flip-card';
+    card.dataset.index = index;
+    card.dataset.icon = icon;
+
+    card.innerHTML = `
+      <div class="flip-card-inner">
+        <div class="flip-card-front">✨</div>
+        <div class="flip-card-back">${icon}</div>
+      </div>
+    `;
+
+    card.addEventListener('click', () => handleCardClick(card));
+    grid.appendChild(card);
+  });
+}
+
+function handleCardClick(card) {
+  if (card.classList.contains('flipped') || card.classList.contains('matched') || flippedCards.length >= 2) {
+    return;
+  }
+
+  card.classList.add('flipped');
+  flippedCards.push(card);
+
+  if (flippedCards.length === 2) {
+    const [card1, card2] = flippedCards;
+
+    if (card1.dataset.icon === card2.dataset.icon) {
+      setTimeout(() => {
+        card1.classList.add('matched');
+        card2.classList.add('matched');
+        flippedCards = [];
+        matchedCount++;
+
+        if (matchedCount === MEMORY_ICONS.length) {
+          document.getElementById('memoryStatus').innerHTML = '🎉 Woohoo! You found all school pairs! Sankha is proud!';
+          triggerSankhaConfetti(1.6);
+        }
+      }, 350);
+    } else {
+      setTimeout(() => {
+        card1.classList.remove('flipped');
+        card2.classList.remove('flipped');
+        flippedCards = [];
+      }, 850);
+    }
+  }
+}
+
+function resetMemoryGame() {
+  initMemoryGame();
+}
+
+/* ============================================================
+   GAME 3: FORTUNE & TREAT CRACKER
+   ============================================================ */
+const SANKHA_WISHES = [
+  "\"You were fun and something something... now treat de! 🍕\"",
+  "\"Winner gets extra tiffin and zero homework. 🥪\"",
+  "\"Picnic bus backseat memories unlocked! 🚌\"",
+  "\"Contract signed: 1 free doctor checkup whenever I pretend to be sick. 🩺\"",
+  "\"School was fun, now go study your giant medical books! 📚\"",
+  "\"Treat pending! Where is my biryani/puchka party? 🎂🎉\""
+];
+let lastWishIndex = -1;
+
+function crackSankhaWish() {
+  let nextIndex;
+  do {
+    nextIndex = Math.floor(Math.random() * SANKHA_WISHES.length);
+  } while (nextIndex === lastWishIndex && SANKHA_WISHES.length > 1);
+
+  lastWishIndex = nextIndex;
+  const resultEl = document.getElementById('crackerResult');
+  const iconEl = document.getElementById('crackerIcon');
+
+  resultEl.style.opacity = '0';
+  iconEl.style.transform = 'scale(1.4) rotate(15deg)';
+
+  setTimeout(() => {
+    resultEl.innerText = SANKHA_WISHES[nextIndex];
+    resultEl.style.opacity = '1';
+    iconEl.style.transform = 'scale(1) rotate(0deg)';
+    triggerSankhaConfetti(0.6);
+  }, 200);
+}
+
+/* ============================================================
+   LIGHTBOX MODAL
+   ============================================================ */
+function openLightbox(photo) {
+  const modal = document.getElementById('lightbox');
+  const imgBox = document.getElementById('lightboxImg');
+  const cap = document.getElementById('lightboxCap');
+
+  if (photo.src) {
+    imgBox.style.backgroundImage = `url('${photo.src}')`;
+    imgBox.innerHTML = '';
+  }
+  cap.innerText = photo.caption;
+  modal.classList.add('open');
+}
+
+document.getElementById('lightboxClose').addEventListener('click', () => {
+  document.getElementById('lightbox').classList.remove('open');
+});
+document.getElementById('lightbox').addEventListener('click', (e) => {
+  if (e.target.id === 'lightbox') {
+    document.getElementById('lightbox').classList.remove('open');
+  }
+});
+
+/* ============================================================
+   INITIALIZATION
+   ============================================================ */
+window.addEventListener('DOMContentLoaded', () => {
+  initThreeBackground();
+  animateThreeBackground();
+  initMemoryGame();
+
+  setTimeout(() => {
+    triggerSankhaConfetti(0.8);
+  }, 600);
+});
+</script>
+</body>
+</html>
